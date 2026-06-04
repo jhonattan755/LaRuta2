@@ -39,7 +39,7 @@ const Inicio = () => {
             LOGÍSTICA NACIONAL SEGURA
           </span>
           <h1 style={{ fontSize: '54px', fontWeight: '800', lineHeight: '1.1', margin: '20px 0', textTransform: 'uppercase' }}>
-            Rápido, Seguro <br /><span style={{ color: '#f59e0b' }}>Y Hecho a tu Medida.</span>
+            Rápidoxsssss, Seguro <br /><span style={{ color: '#f59e0b' }}>Y Hecho a tu Medida.</span>
           </h1>
           <p style={{ fontSize: '16px', color: '#bfdbfe', lineHeight: '1.6', maxWidth: '450px', marginBottom: '30px' }}>
             Conectamos tus productos con todo El Salvador. Llevamos tus paquetes a agencias autorizadas con total control de dimensiones, tarifas transparentes y recolección eficiente.
