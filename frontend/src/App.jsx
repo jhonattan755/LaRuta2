@@ -1,23 +1,20 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Login } from './views/Login';
 import Empleado from './views/Empleado'; 
-// 1. IMPORTACIÓN AÑADIDA: Traemos la nueva página de inicio informativa
-import Inicio from './views/Inicio';
+import Inicio from './views/Inicio'; // Tu página que actúa como Admin
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* 2. CAMBIO AQUÍ: La raíz ahora muestra la Landing Page informativa */}
-        <Route path="/" element={<Inicio />} />
+        {/* La puerta de entrada principal es tu nuevo Login oscuro */}
+        <Route path="/" element={<Login />} />
         
-        {/* 3. NUEVA RUTA: Movemos el Login a su propio espacio */}
-        <Route path="/login" element={<Login />} />
-        
-        {/* Esta es la ruta para tu panel de encomiendas */}
+        {/* Ruta exclusiva para el Empleado / Ventanilla */}
         <Route path="/empleado" element={<Empleado />} />
         
-        {/* Aquí agregaremos más rutas luego, como /cliente o /admin */}
+        {/* Ruta exclusiva para el Administrador */}
+        <Route path="/admin" element={<Inicio />} />
       </Routes>
     </Router>
   );

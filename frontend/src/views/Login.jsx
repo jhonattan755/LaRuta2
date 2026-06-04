@@ -1,25 +1,66 @@
 import { useState } from 'react';
+// 🔌 IMPORTACIÓN CLAVE: El timón para cambiar de página en React Router
+import { useNavigate } from 'react-router-dom';
 
 export function Login() {
   // EL CEREBRO: Variables para recordar lo que el usuario escribe
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
+  const [recordarme, setRecordarme] = useState(false);
+  // Inicializamos el timón de navegación
+  const navigate = useNavigate();
 
   // LA PINTURA DE TU FOTO: Inputs oscuros, súper redondeados y elegantes
   const estiloInput = "w-full bg-[#1e293b]/50 border border-slate-700 text-slate-200 placeholder-slate-500 text-sm px-4 py-3 rounded-full focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-sans mb-5";
+
+  const manejarEnvio = async (e) => {
+    e.preventDefault();
+
+    if (!correo || !password) {
+      alert('Por favor, llena todos los campos.');
+      return;
+    }
+
+    try {
+      // 🚀 Mandamos los datos reales por las tuberías hacia tu backend local en puerto 5000
+      const respuesta = await fetch('http://localhost:5000/api/usuarios/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: correo, password: password })
+      });
+
+      const datos = await respuesta.json();
+
+      if (respuesta.ok) {
+        // El backend lee el rol guardado en MongoDB Atlas y nos lo devuelve
+        if (datos.rol === 'administrador') {
+          navigate('/admin');
+        } else if (datos.rol === 'empleado') {
+          navigate('/empleado');
+        } else {
+          alert(`¡Hola ${datos.nombre}! Tu rol aún no tiene una ruta asignada.`);
+        }
+      } else {
+        // Muestra si la clave está mal o si el correo no existe en la nube
+        alert(datos.mensaje);
+      }
+
+    } catch (error) {
+      alert('No se pudo conectar con el servidor. ¿Olvidaste encender el Backend con "node server.js"?');
+    }
+  };
 
   return (
     /* 🚀 CONTENEDOR TOTAL A PANTALLA COMPLETA */
     <div className="min-h-screen w-screen bg-[#111827] flex font-sans overflow-hidden">
       
-      {/* 📦 ESTRUCTURA EXTENDIDA A TODO EL ENTORNO (Grid de lado a lado) */}
-      <div className="w-full w-col-12 grid grid-cols-1 md:grid-cols-12 min-h-screen">
+      {/* 📦 ESTRUCTURA EXTENDIDA A TODO EL ENTORNO (Corregido w-col-12 por w-full) */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-12 min-h-screen">
         
         {/* LA MITAD IZQUIERDA: Ocupa el 50% de la pantalla completa, con curva masiva y foto real de fondo */}
         <div 
           className="hidden md:flex md:col-span-6 p-16 flex-col justify-between relative bg-cover bg-center rounded-r-[80px] lg:rounded-r-[140px] shadow-2xl z-10"
           style={{ 
-            // Imagen profesional de referencia de entrega y logística de transporte de paquetes
             backgroundImage: `linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85)), url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=1200')` 
           }}
         >
@@ -67,7 +108,7 @@ export function Login() {
               Ingresa tus credenciales autorizadas de la empresa.
             </p>
 
-            <form onSubmit={(e) => e.preventDefault()}>
+            <form onSubmit={manejarEnvio}>
               {/* 1. TEXT BOX DEL CORREO */}
               <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-widest px-1">
                 Usuario / Correo
@@ -96,6 +137,20 @@ export function Login() {
                 className={estiloInput} 
                 onChange={(e) => setPassword(e.target.value)}
               />
+
+              {/* 3. 💡 CHECKBOX INTEGRADO CON TU DISEÑO OSCURO */}
+              <div className="flex items-center mb-2 px-2">
+                <input
+                  id="recordarme"
+                  type="checkbox"
+                  checked={recordarme}
+                  onChange={(e) => setRecordarme(e.target.checked)}
+                  className="h-4 w-4 bg-slate-800 border-slate-700 rounded text-blue-500 focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                />
+                <label htmlFor="recordarme" className="ml-2 text-xs text-slate-400 font-bold uppercase tracking-wider select-none cursor-pointer">
+                  Recordar mi información
+                </label>
+              </div>
 
               {/* BOTÓN TOTALMENTE REDONDEADO */}
               <button 
@@ -126,4 +181,4 @@ export function Login() {
       </div>
     </div>
   );
-} 
+}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 // 1. IMPORTACIÓN AÑADIDA: Traemos el hook para navegar entre pantallas
 import { useNavigate } from 'react-router-dom';
 
