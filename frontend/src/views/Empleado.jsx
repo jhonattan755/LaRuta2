@@ -1,0 +1,343 @@
+import React, { useState } from 'react';
+// 1. IMPORTACIÓN AÑADIDA: Traemos el hook para navegar entre pantallas
+import { useNavigate } from 'react-router-dom';
+
+const Empleado = () => {
+  // 2. INICIALIZACIÓN AÑADIDA: Instanciamos el hook de navegación
+  const navigate = useNavigate();
+
+  // Datos extraídos directamente de las tablas reales de "DESTINOS Y HORARIOS 2026"
+  const destinosReales = {
+    'Ahuachapán': [
+      { nombre: 'Ahuachapán (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 1:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Cara Sucia (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Atiquizaya (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'Santa Ana': [
+      { nombre: 'Santa Ana Centro (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Santa Ana Plaza 33 (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 1:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Metapán (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Chalchuapa (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'Sonsonate': [
+      { nombre: 'Sonsonate (Agencia)', horario: 'Lun a Sáb: 9:00 am-4:00 pm / Dom: 12:40 pm-1:40 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Sonzacate (Agencia)', horario: 'Lun a Sáb: 9:00 am-4:00 pm / Dom: 11:50 am-12:20 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Izalco (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Dom: 10:30 am - 11:30 am', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'San Salvador': [
+      { nombre: 'San Salvador - Metrogalerias (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 1:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'San Salvador Centro Historico (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'San Salvador - Plaza Jerez (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Soyapango (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Apopa (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 1:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'La Libertad': [
+      { nombre: 'Santa Tecla (Agencia)', horario: 'Miércoles y Sábado: 1:00 pm - 3:00 pm', lugar: 'Local De Entrega (Costo Extra $0.50)', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Lourdes (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Zaragoza', horario: 'Miércoles y Sábado: 2:15 pm - 3:00 pm', lugar: 'Fte a casa de la cultura', duracion: 'Entrega en Punto Fijo' }
+    ],
+    'San Miguel': [
+      { nombre: 'San Miguel (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'Usulután': [
+      { nombre: 'Usulutan (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Jiquilisco (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Santiago de María (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'Cuscatlán': [
+      { nombre: 'Cojutepeque (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Suchitoto', horario: 'Martes y Viernes: 8:00 am - 9:00 am', lugar: 'Parque Central', duracion: 'Entrega en Punto Fijo' }
+    ],
+    'La Unión': [
+      { nombre: 'La Unión (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Santa Rosa de lima (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega (Apartir del 21 de abril)', duracion: 'Retención Estándar' }
+    ],
+    'Morazán': [
+      { nombre: 'San Francisco Gotera (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'La Paz': [
+      { nombre: 'Zacatecoluca (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
+      { nombre: 'Olocuiltla', horario: 'Martes y Viernes: 10:30 am - 11:00 am', lugar: 'Parqueo de Mercado de Artesania', duracion: 'Entrega en Punto Fijo' }
+    ],
+    'San Vicente': [
+      { nombre: 'San Vicente (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'Cabañas': [
+      { nombre: 'Sensuntepeque', horario: 'Lunes y Jueves: 9:00 am- 11:00 am', lugar: 'Local De Entrega', duracion: 'Retención en Agencia' }
+    ],
+    'Chalatenango': [
+      { nombre: 'Chalatenango (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
+    ]
+  };
+
+  const [paquete, setPaquete] = useState({
+    cliente: '',
+    telefono: '',
+    producto: 'Ropa',
+    tipoTamano: 'Medidas',
+    peso: '',
+    largo: '',
+    ancho: '',
+    alto: '',
+    departamento: 'Ahuachapán',
+    destinoIndex: 0, 
+    direccionDetalle: ''
+  });
+
+  const [tarifaCalculada, setTarifaCalculada] = useState(0);
+  const [fotoPreview, setFotoPreview] = useState(null);
+  const [nombreArchivo, setNombreArchivo] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'departamento') {
+      setPaquete({
+        ...paquete,
+        departamento: value,
+        destinoIndex: 0 
+      });
+    } else {
+      setPaquete({
+        ...paquete,
+        [name]: value
+      });
+    }
+  };
+
+  const handleTelefonoChange = (e) => {
+    const inputLimpio = e.target.value.replace(/\D/g, '');
+    const digitosLimitados = inputLimpio.slice(0, 8);
+    let telefonoFormateado = digitosLimitados;
+    if (digitosLimitados.length > 4) {
+      telefonoFormateado = `${digitosLimitados.slice(0, 4)}-${digitosLimitados.slice(4)}`;
+    }
+    setPaquete({ ...paquete, telefono: telefonoFormateado });
+  };
+
+  const handleFotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFotoPreview(URL.createObjectURL(file));
+      setNombreArchivo(file.name);
+    }
+  };
+
+  const calcularTarifa = (e) => {
+    e.preventDefault();
+    if (paquete.tipoTamano === 'Basico') {
+      setTarifaCalculada((1.00).toFixed(2));
+      return;
+    }
+
+    let base = 1.00; 
+    let excedentePeso = 0;
+    let excedenteDistancia = 0;
+
+    const pesoNum = parseFloat(paquete.peso) || 0;
+    if (pesoNum > 5) excedentePeso = (pesoNum - 5) * 0.50; 
+
+    const volumen = (parseFloat(paquete.largo) || 0) * (parseFloat(paquete.ancho) || 0) * (parseFloat(paquete.alto) || 0);
+    if (volumen > 1000) excedentePeso += 1.50; 
+
+    const zonaOriente = ['San Miguel', 'La Unión', 'Morazán', 'Usulután'];
+    const zonaOccidente = ['Santa Ana', 'Ahuachapán', 'Sonsonate'];
+
+    if (zonaOriente.includes(paquete.departamento)) {
+      excedenteDistancia = 2.00;
+    } else if (zonaOccidente.includes(paquete.departamento)) {
+      excedenteDistancia = 1.50;
+    } else if (paquete.departamento !== 'San Salvador') {
+      excedenteDistancia = 1.00; 
+    }
+
+    const total = base + excedentePeso + excedenteDistancia;
+    setTarifaCalculada(total.toFixed(2));
+  };
+
+  const infoDestinoSeleccionado = destinosReales[paquete.departamento][paquete.destinoIndex] || destinosReales[paquete.departamento][0];
+
+  return (
+    <div style={{ backgroundColor: '#f3f4f6', minHeight: '100vh', padding: '24px', fontFamily: 'sans-serif' }}>
+      
+      {/* HEADER PRINCIPAL MODIFICADO CON BOTÓN DE REGRESO INTERNO */}
+      <header style={{ backgroundColor: '#1e3a8a', color: 'white', padding: '16px 24px', borderRadius: '8px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          {/* Botón dinámico para volver a la Landing Informativa */}
+          <button 
+            onClick={() => navigate('/')} 
+            style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.25)'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'}
+          >
+            🏠 Ver Inicio
+          </button>
+          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 'bold' }}>La Ruta - Panel de Despacho</h1>
+        </div>
+        <span style={{ backgroundColor: '#3b82f6', padding: '6px 12px', borderRadius: '20px', fontSize: '14px' }}>Empleado Activo</span>
+      </header>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        {/* Formulario */}
+        <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ marginTop: 0, color: '#1f2937', borderBottom: '2px solid #e5e7eb', paddingBottom: '10px' }}>Registrar Nueva Encomienda</h2>
+          
+          <form onSubmit={calcularTarifa}>
+            <h3 style={{ color: '#4b5563', fontSize: '16px' }}>1. Datos del Cliente y Envío</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: 'bold' }}>Nombre Cliente:</label>
+                <input type="text" name="cliente" value={paquete.cliente} onChange={handleChange} required style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #d1d5db' }} placeholder="Ej. Juan Pérez" />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: 'bold' }}>Teléfono (0000-0000):</label>
+                <input type="text" name="telefono" value={paquete.telefono} onChange={handleTelefonoChange} required style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #d1d5db' }} placeholder="Ej. 7777-7777" />
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px', alignItems: 'end' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: 'bold' }}>Tipo de Producto:</label>
+                <select name="producto" value={paquete.producto} onChange={handleChange} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #d1d5db' }}>
+                  <option value="Ropa">Ropa / Calzado</option>
+                  <option value="Tecnologia">Tecnología / Accesorios</option>
+                  <option value="Documentos">Documentos</option>
+                  <option value="Otro">Otro (Voluminoso)</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '6px', fontSize: '14px', fontWeight: 'bold' }}> Foto del Producto:</label>
+                <input type="file" id="upload-photo" accept="image/*" onChange={handleFotoChange} style={{ display: 'none' }} />
+                <label htmlFor="upload-photo" style={{ display: 'block', backgroundColor: '#3b82f6', color: 'white', padding: '9px 16px', borderRadius: '4px', textAlign: 'center', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                  {fotoPreview ? ' Cambiar Foto' : '➕ Agregar Foto'}
+                </label>
+                {nombreArchivo && (
+                  <span style={{ display: 'block', fontSize: '11px', color: '#6b7280', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {nombreArchivo}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <h3 style={{ color: '#4b5563', fontSize: '16px' }}>2. Dimensiones y Equivalencia</h3>
+            <div style={{ display: 'flex', gap: '16px', marginBottom: '12px' }}>
+              <label style={{ fontWeight: 'bold', fontSize: '14px', cursor: 'pointer' }}>
+                <input type="radio" name="tipoTamano" value="Basico" checked={paquete.tipoTamano === 'Basico'} onChange={handleChange} style={{ marginRight: '6px' }} />
+                Básico (Pequeño / Fijo $1.00)
+              </label>
+              <label style={{ fontWeight: 'bold', fontSize: '14px', cursor: 'pointer' }}>
+                <input type="radio" name="tipoTamano" value="Medidas" checked={paquete.tipoTamano === 'Medidas'} onChange={handleChange} style={{ marginRight: '6px' }} />
+                Calcular por Medidas/Peso
+              </label>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px', marginBottom: '16px', opacity: paquete.tipoTamano === 'Basico' ? 0.4 : 1, transition: '0.3s' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 'bold' }}>Peso (lbs):</label>
+                <input type="number" name="peso" value={paquete.peso} onChange={handleChange} disabled={paquete.tipoTamano === 'Basico'} required={paquete.tipoTamano === 'Medidas'} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #d1d5db' }} placeholder="0" />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 'bold' }}>Largo (cm):</label>
+                <input type="number" name="largo" value={paquete.largo} onChange={handleChange} disabled={paquete.tipoTamano === 'Basico'} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #d1d5db' }} placeholder="0" />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 'bold' }}>Ancho (cm):</label>
+                <input type="number" name="ancho" value={paquete.ancho} onChange={handleChange} disabled={paquete.tipoTamano === 'Basico'} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #d1d5db' }} placeholder="0" />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 'bold' }}>Alto (cm):</label>
+                <input type="number" name="alto" value={paquete.alto} onChange={handleChange} disabled={paquete.tipoTamano === 'Basico'} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #d1d5db' }} placeholder="0" />
+              </div>
+            </div>
+
+            <h3 style={{ color: '#4b5563', fontSize: '16px' }}>3. Destino Nacional (Horarios 2026)</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: 'bold' }}>Departamento:</label>
+                <select name="departamento" value={paquete.departamento} onChange={handleChange} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #d1d5db' }}>
+                  {Object.keys(destinosReales).map((depto) => (
+                    <option key={depto} value={depto}>{depto}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: 'bold' }}>Agencia / Destino:</label>
+                <select 
+                  name="destinoIndex" 
+                  value={paquete.destinoIndex} 
+                  onChange={(e) => setPaquete({ ...paquete, destinoIndex: parseInt(e.target.value) })} 
+                  style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #d1d5db' }}
+                >
+                  {destinosReales[paquete.departamento].map((dest, idx) => (
+                    <option key={idx} value={idx}>{dest.nombre}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Cuadro informativo dinámico sobre la Agencia */}
+            <div style={{ backgroundColor: '#eff6ff', borderLeft: '4px solid #3b82f6', padding: '12px', borderRadius: '4px', marginBottom: '16px', fontSize: '13px', color: '#1e40af' }}>
+              <strong>🗓️ Horario de Agencia:</strong> {infoDestinoSeleccionado.horario} <br />
+              <strong>📍 Lugar de entrega:</strong> {infoDestinoSeleccionado.lugar}
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: 'bold' }}>Indicaciones adicionales de la dirección:</label>
+              <input type="text" name="direccionDetalle" value={paquete.direccionDetalle} onChange={handleChange} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #d1d5db' }} placeholder="Ej. Detrás de la catedral, portón negro" />
+            </div>
+
+            <button type="submit" style={{ width: '100%', backgroundColor: '#10b981', color: 'white', padding: '12px', borderRadius: '6px', border: 'none', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer' }}>
+              Calcular Tarifa de Envío
+            </button>
+          </form>
+        </div>
+
+        {/* Columna Derecha: Tarjeta de Cotización y Foto */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div style={{ backgroundColor: '#1e3a8a', color: 'white', padding: '32px', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+            <h2 style={{ marginTop: 0, fontSize: '20px', color: '#93c5fd' }}>Costo Estimado de Encomienda</h2>
+            <div style={{ fontSize: '64px', fontWeight: 'bold', margin: '10px 0' }}>
+              ${tarifaCalculada}
+            </div>
+            
+            {fotoPreview && (
+              <div style={{ marginBottom: '24px', width: '100%', maxWidth: '320px' }}>
+                <p style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#93c5fd', fontWeight: '500' }}>Vista previa del producto:</p>
+                <div style={{ width: '100%', height: '260px', borderRadius: '12px', overflow: 'hidden', border: '3px solid white', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.4)', backgroundColor: '#0f172a' }}>
+                  <img src={fotoPreview} alt="Producto" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </div>
+              </div>
+            )}
+
+            {/* Alerta de Retención y Días que dura en Agencia */}
+            <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', padding: '14px', borderRadius: '8px', width: '100%', maxWidth: '320px', marginBottom: '16px', fontSize: '13px' }}>
+              <span style={{ display: 'block', fontWeight: 'bold', color: '#fca5a5', marginBottom: '4px' }}>
+                ⚠️ TIEMPO LÍMITE EN AGENCIA:
+              </span>
+              <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#f8fafc' }}>
+                {infoDestinoSeleccionado.duracion === 'Paquete Dura 3 Dias' ? '⏳ ¡Dura un máximo de 3 Días!' : '📦 Tiempo de retiro estándar'}
+              </span>
+            </div>
+
+            <p style={{ margin: 0, fontSize: '14px', color: '#bfdbfe' }}>
+              {paquete.tipoTamano === 'Basico' 
+                ? 'Modalidad: Envío Básico con Tarifa Fija.' 
+                : `Tarifa base: $1.00 + Equivalencia calculada para ${paquete.departamento}.`}
+            </p>
+            
+            <p style={{ fontSize: '13px', color: '#93c5fd', marginTop: '6px', fontWeight: 'bold' }}>
+              📍 Destino: {infoDestinoSeleccionado.nombre}
+            </p>
+            
+            {tarifaCalculada > 0 && (
+              <button onClick={() => alert('Encomienda Guardada con la info oficial de horarios e importación de datos.')} style={{ marginTop: '20px', backgroundColor: 'white', color: '#1e3a8a', padding: '12px 24px', borderRadius: '6px', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', width: '100%', maxWidth: '320px' }}>
+                Confirmar y Generar Guía de Ruta
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Empleado;
