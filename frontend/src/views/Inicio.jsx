@@ -1,4 +1,4 @@
-import React from 'react';
+
 // 1. AQUÍ CAMBIÓ: Importamos useNavigate para el manejo de rutas internas
 import { useNavigate } from 'react-router-dom';
 
