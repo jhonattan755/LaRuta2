@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { useEffect } from 'react'; // 🔄 Importamos useEffect para controlar los títulos
 
 // Importación de todas tus páginas
-import Inicio from './views/Inicio';
+import InicioEmpleado from './views/Inicio';
 import { Login } from './views/Login'; 
 import Empleado from './views/Empleado'; 
 import InicioUsuario from './views/InicioUsuario';
@@ -45,9 +45,10 @@ function App() {
 
       <Routes>
         {/* Tus rutas originales restablecidas */}
-        <Route path="/" element={<Inicio />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/empleado" element={<Empleado />} />
+        <Route path="/inicio-empleado" element={<InicioEmpleado />} />
         <Route path="/inicio-usuario" element={<InicioUsuario />} />
         
         {/* Tu nueva pantalla de Registro (FormularioUsuario) integrada perfectamente */}

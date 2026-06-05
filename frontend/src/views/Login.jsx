@@ -34,9 +34,13 @@ export function Login() {
       if (respuesta.ok) {
         // El backend lee el rol guardado en MongoDB Atlas y nos lo devuelve
         if (datos.rol === 'administrador') {
-          navigate('/admin');
+          navigate('/ganancias');
         } else if (datos.rol === 'empleado') {
-          navigate('/empleado');
+          navigate('/inicio-empleado');
+        } else if (datos.rol === 'repartidor') {
+          navigate('/repartidor');
+        } else if (datos.rol === 'usuario') {
+          navigate('/inicio-usuario');
         } else {
           navigate('/inicio-usuario');
         }

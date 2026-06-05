@@ -11,6 +11,9 @@ const FormularioUsuario = () => {
   const [departamento, setDepartamento] = useState('');
   const [password, setPassword] = useState('');
 
+  // 🔔 NUEVO: Estado para manejar los mensajes de éxito o error con estilo en pantalla
+  const [mensaje, setMensaje] = useState({ texto: '', tipo: '' });
+
   // Estilo reutilizable para mantener consistencia con los inputs de tu Login
   const estiloInput = "w-full bg-[#1e293b]/50 border border-slate-700 text-slate-200 placeholder-slate-500 text-sm px-4 py-3 rounded-full focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-sans";
   const estiloLabel = "block text-xs font-bold text-slate-400 mb-2 uppercase tracking-widest px-1";
@@ -30,10 +33,11 @@ const FormularioUsuario = () => {
 
   const manejarRegistro = async (e) => {
     e.preventDefault();
+    setMensaje({ texto: '', tipo: '' }); // Limpiar alertas previas
 
     // 1. Validación básica de campos vacíos
     if (!nombre || !correo || !telefono || !departamento || !password) {
-      alert('Por favor, llena todos los campos para registrarte.');
+      setMensaje({ texto: 'Por favor, llena todos los campos para registrarte.', tipo: 'error' });
       return;
     }
 
@@ -58,30 +62,43 @@ const FormularioUsuario = () => {
     }
 
     try {
-      // 🚀 Listo para conectar con tu Backend (puedes ajustar la ruta según tus endpoints)
+      // 🚀 Conexión con tu Backend 
       const respuesta = await fetch('http://localhost:5000/api/usuarios/registro', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nombre: nombre,
-          email: correo,
+          email: correo,      // Mapeado a 'email' tal como lo espera tu modelo
           telefono: telefono,
           departamento: departamento,
           password: password,
-          rol: 'usuario' // Rol por defecto para los clientes que se registran desde aquí
+          rol: 'usuario'      // Rol por defecto
         })
       });
 
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
-        alert('¡Registro exitoso! Ya puedes iniciar sesión.');
-        navigate('/login');
+        setMensaje({ texto: '¡Registro exitoso! Redirigiendo al inicio de sesión...', tipo: 'exito' });
+        
+        // Limpiamos los campos del formulario
+        setNombre('');
+        setCorreo('');
+        setTelefono('');
+        setDepartamento('');
+        setPassword('');
+
+        // Espera 2 segundos para que el usuario logre leer el mensaje de éxito antes de moverlo
+        setTimeout(() => {
+          navigate('/login');
+        }, 2200);
+
       } else {
-        alert(datos.mensaje || 'Hubo un error al registrar la cuenta.');
+        // Muestra el mensaje exacto que configuraste en el backend (ej: "Este correo ya existe")
+        setMensaje({ texto: datos.message || datos.mensaje || 'Hubo un error al registrar la cuenta.', tipo: 'error' });
       }
     } catch (error) {
-      alert('No se pudo conectar con el servidor. Verifica que tu backend esté encendido.');
+      setMensaje({ texto: 'No se pudo conectar con el servidor. Verifica que tu backend esté encendido.', tipo: 'error' });
     }
   };
 
@@ -95,6 +112,17 @@ const FormularioUsuario = () => {
         <p className="text-sm text-slate-400 mb-8 text-center">
           Completa tus datos para ingresar a La Ruta.
         </p>
+
+        {/* 🔔 CASILLA VISUAL DE ALERTAS */}
+        {mensaje.texto && (
+          <div className={`p-3.5 mb-5 rounded-2xl text-xs font-bold uppercase tracking-wider text-center transition-all ${
+            mensaje.tipo === 'exito' 
+              ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400' 
+              : 'bg-rose-500/10 border border-rose-500/30 text-rose-400'
+          }`}>
+            {mensaje.texto}
+          </div>
+        )}
         
         <form onSubmit={manejarRegistro} className="space-y-5">
           {/* 1. NOMBRE DE LA TIENDA O PERSONA */}
@@ -136,28 +164,30 @@ const FormularioUsuario = () => {
           {/* 4. DEPARTAMENTO DONDE HABITA */}
           <div>
             <label className={estiloLabel}>Departamento</label>
-            <select 
-              value={departamento}
-              onChange={(e) => setDepartamento(e.target.value)}
-              className={`${estiloInput} appearance-none cursor-pointer`}
-              style={{ colorScheme: 'dark' }}
-            >
-              <option value="" disabled className="text-slate-500">Selecciona tu departamento</option>
-              <option value="Ahuachapán">Ahuachapán</option>
-              <option value="Cabañas">Cabañas</option>
-              <option value="Chalatenango">Chalatenango</option>
-              <option value="Cuscatlán">Cuscatlán</option>
-              <option value="La Libertad">La Libertad</option>
-              <option value="La Paz">La Paz</option>
-              <option value="La Unión">La Unión</option>
-              <option value="Morazán">Morazán</option>
-              <option value="San Miguel">San Miguel</option>
-              <option value="San Salvador">San Salvador</option>
-              <option value="San Vicente">San Vicente</option>
-              <option value="Santa Ana">Santa Ana</option>
-              <option value="Sonsonate">Sonsonate</option>
-              <option value="Usulután">Usulután</option>
-            </select>
+            <div className="relative">
+              <select 
+                value={departamento}
+                onChange={(e) => setDepartamento(e.target.value)}
+                className={`${estiloInput} appearance-none cursor-pointer`}
+                style={{ colorScheme: 'dark' }}
+              >
+                <option value="" disabled className="text-slate-500">Selecciona tu departamento</option>
+                <option value="Ahuachapán">Ahuachapán</option>
+                <option value="Cabañas">Cabañas</option>
+                <option value="Chalatenango">Chalatenango</option>
+                <option value="Cuscatlán">Cuscatlán</option>
+                <option value="La Libertad">La Libertad</option>
+                <option value="La Paz">La Paz</option>
+                <option value="La Unión">La Unión</option>
+                <option value="Morazán">Morazán</option>
+                <option value="San Miguel">San Miguel</option>
+                <option value="San Salvador">San Salvador</option>
+                <option value="San Vicente">San Vicente</option>
+                <option value="Santa Ana">Santa Ana</option>
+                <option value="Sonsonate">Sonsonate</option>
+                <option value="Usulután">Usulután</option>
+              </select>
+            </div>
           </div>
 
           {/* 5. CONTRASEÑA */}
