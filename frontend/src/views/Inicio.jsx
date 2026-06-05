@@ -20,7 +20,7 @@ const Inicio = () => {
           <span style={{ fontSize: '24px', fontWeight: 'bold', letterSpacing: '1px' }}>📍 LA RUTA</span>
         </div>
         <div style={{ display: 'flex', gap: '30px', fontSize: '15px', fontWeight: '500' }}>
-          <span style={{ cursor: 'pointer', opacity: 0.9 }}>Inicio</span>
+          <span style={{ cursor: 'pointer', opacity: 0.9 }}>Iniciooo</span>
           <span style={{ cursor: 'pointer', opacity: 0.7 }}>Servicios</span>
           <span style={{ cursor: 'pointer', opacity: 0.7 }}>Cobertura 2026</span>
           <span style={{ cursor: 'pointer', opacity: 0.7 }}>Agencias</span>
