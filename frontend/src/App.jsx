@@ -6,7 +6,8 @@ import { Login } from './views/Login';
 import Empleado from './views/Empleado'; 
 import InicioUsuario from './views/InicioUsuario';
 import Ganancias from './views/Ganancias';
-import Repartidores from './views/Repartidores'; // <-- Nueva importación de la página creada
+import Repartidores from './views/Repartidores'; 
+import PanelDeEmpleados from './views/PanelDeEmpleados'; // <-- Nueva importación agregada
 
 function App() {
   return (
@@ -23,6 +24,9 @@ function App() {
 
         {/* Tu nueva pantalla de Repartidores integrada perfectamente */}
         <Route path="/repartidor" element={<Repartidores />} />
+
+        {/* Tu nueva pantalla de Gestión de Empleados integrada perfectamente */}
+        <Route path="/panel-empleados" element={<PanelDeEmpleados />} />
 
         {/* Ruta de seguridad: Si escriben algo que no existe, redirige al inicio */}
         <Route path="*" element={<Navigate to="/" replace />} />
