@@ -50,20 +50,18 @@ function Ganancias() {
           {/* Menú de Navegación */}
           <nav className="p-4 space-y-1">
             <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl bg-blue-50 text-blue-900 transition-all">
-              <LayoutDashboard size={18} /> Dashboard
+              <LayoutDashboard size={18} /> Menu Principal
             </button>
             <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all">
-              <Truck size={18} /> Shipments
+              <Truck size={18} /> Repartidores
             </button>
             <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all">
-              <Map size={18} /> Routes
+              <Map size={18} /> Panel de Empleados
             </button>
             <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all">
-              <DollarSign size={18} /> Rate Manager
+              <DollarSign size={18} /> Salir
             </button>
-            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all">
-              <TrendingUp size={18} /> Analytics
-            </button>
+           
           </nav>
         </div>
 
