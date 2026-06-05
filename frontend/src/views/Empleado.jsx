@@ -1,72 +1,54 @@
 import { useState } from 'react';
-// 1. IMPORTACIÓN AÑADIDA: Traemos el hook para navegar entre pantallas
+// IMPORTACIÓN: Traemos el hook para navegar entre pantallas
 import { useNavigate } from 'react-router-dom';
 
 const Empleado = () => {
-  // 2. INICIALIZACIÓN AÑADIDA: Instanciamos el hook de navegación
+  // INICIALIZACIÓN: Instanciamos el hook de navegación
   const navigate = useNavigate();
 
-  // Datos extraídos directamente de las tablas reales de "DESTINOS Y HORARIOS 2026"
+  // Estructura oficial de 14 sedes únicas (una para cada uno de los 14 departamentos de El Salvador)
   const destinosReales = {
     'Ahuachapán': [
-      { nombre: 'Ahuachapán (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 1:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Cara Sucia (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Atiquizaya (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
+      { nombre: 'Ahuachapán (Sede Central)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm', lugar: 'Local de Entrega Principal', duracion: 'Paquete Dura 3 Dias' }
     ],
     'Santa Ana': [
-      { nombre: 'Santa Ana Centro (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Santa Ana Plaza 33 (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 1:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Metapán (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Chalchuapa (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
+      { nombre: 'Santa Ana Centro (Sede Central)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm', lugar: 'Local de Entrega Principal', duracion: 'Paquete Dura 3 Dias' }
     ],
     'Sonsonate': [
-      { nombre: 'Sonsonate (Agencia)', horario: 'Lun a Sáb: 9:00 am-4:00 pm / Dom: 12:40 pm-1:40 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Sonzacate (Agencia)', horario: 'Lun a Sáb: 9:00 am-4:00 pm / Dom: 11:50 am-12:20 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Izalco (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Dom: 10:30 am - 11:30 am', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
-    ],
-    'San Salvador': [
-      { nombre: 'San Salvador - Metrogalerias (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 1:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'San Salvador Centro Historico (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'San Salvador - Plaza Jerez (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Soyapango (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Apopa (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 1:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
-    ],
-    'La Libertad': [
-      { nombre: 'Santa Tecla (Agencia)', horario: 'Miércoles y Sábado: 1:00 pm - 3:00 pm', lugar: 'Local De Entrega (Costo Extra $0.50)', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Lourdes (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Zaragoza', horario: 'Miércoles y Sábado: 2:15 pm - 3:00 pm', lugar: 'Fte a casa de la cultura', duracion: 'Entrega en Punto Fijo' }
-    ],
-    'San Miguel': [
-      { nombre: 'San Miguel (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
-    ],
-    'Usulután': [
-      { nombre: 'Usulutan (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Jiquilisco (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Santiago de María (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
-    ],
-    'Cuscatlán': [
-      { nombre: 'Cojutepeque (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Suchitoto', horario: 'Martes y Viernes: 8:00 am - 9:00 am', lugar: 'Parque Central', duracion: 'Entrega en Punto Fijo' }
-    ],
-    'La Unión': [
-      { nombre: 'La Unión (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Santa Rosa de lima (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega (Apartir del 21 de abril)', duracion: 'Retención Estándar' }
-    ],
-    'Morazán': [
-      { nombre: 'San Francisco Gotera (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
-    ],
-    'La Paz': [
-      { nombre: 'Zacatecoluca (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' },
-      { nombre: 'Olocuiltla', horario: 'Martes y Viernes: 10:30 am - 11:00 am', lugar: 'Parqueo de Mercado de Artesania', duracion: 'Entrega en Punto Fijo' }
-    ],
-    'San Vicente': [
-      { nombre: 'San Vicente (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
-    ],
-    'Cabañas': [
-      { nombre: 'Sensuntepeque', horario: 'Lunes y Jueves: 9:00 am- 11:00 am', lugar: 'Local De Entrega', duracion: 'Retención en Agencia' }
+      { nombre: 'Sonsonate (Sede Central)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Dom: 12:40 pm-1:40 pm', lugar: 'Local de Entrega Principal', duracion: 'Paquete Dura 3 Dias' }
     ],
     'Chalatenango': [
-      { nombre: 'Chalatenango (Agencia)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 12:00 pm', lugar: 'Local De Entrega', duracion: 'Paquete Dura 3 Dias' }
+      { nombre: 'Chalatenango (Sede Central)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm', lugar: 'Local de Entrega Principal', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'La Libertad': [
+      { nombre: 'Santa Tecla (Sede Central)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm', lugar: 'Local de Entrega Principal', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'San Salvador': [
+      { nombre: 'San Salvador - Metrogalerías (Sede Central)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm / Sáb: 9:00 am - 1:00 pm', lugar: 'Local de Entrega Principal', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'Cuscatlán': [
+      { nombre: 'Cojutepeque (Sede Central)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm', lugar: 'Local de Entrega Principal', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'La Paz': [
+      { nombre: 'Zacatecoluca (Sede Central)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm', lugar: 'Local de Entrega Principal', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'Cabañas': [
+      { nombre: 'Sensuntepeque (Sede Central)', horario: 'Lunes a Jueves: 9:00 am - 11:00 am', lugar: 'Local de Entrega Principal', duracion: 'Retención en Agencia' }
+    ],
+    'San Vicente': [
+      { nombre: 'San Vicente (Sede Central)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm', lugar: 'Local de Entrega Principal', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'Usulután': [
+      { nombre: 'Usulután (Sede Central)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm', lugar: 'Local de Entrega Principal', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'San Miguel': [
+      { nombre: 'San Miguel (Sede Central)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm', lugar: 'Local de Entrega Principal', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'Morazán': [
+      { nombre: 'San Francisco Gotera (Sede Central)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm', lugar: 'Local de Entrega Principal', duracion: 'Paquete Dura 3 Dias' }
+    ],
+    'La Unión': [
+      { nombre: 'La Unión (Sede Central)', horario: 'Lun a Sáb: 9:00 am - 4:00 pm', lugar: 'Local de Entrega Principal', duracion: 'Paquete Dura 3 Dias' }
     ]
   };
 
@@ -162,7 +144,6 @@ const Empleado = () => {
       {/* HEADER PRINCIPAL MODIFICADO CON BOTÓN DE REGRESO INTERNO */}
       <header style={{ backgroundColor: '#1e3a8a', color: 'white', padding: '16px 24px', borderRadius: '8px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          {/* Botón dinámico para volver a la Landing Informativa */}
           <button 
             onClick={() => navigate('/')} 
             style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}
@@ -249,7 +230,7 @@ const Empleado = () => {
               </div>
             </div>
 
-            <h3 style={{ color: '#4b5563', fontSize: '16px' }}>3. Destino Nacional (Horarios 2026)</h3>
+            <h3 style={{ color: '#4b5563', fontSize: '16px' }}>3. Destino Nacional (14 Sedes Oficiales)</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
               <div>
                 <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: 'bold' }}>Departamento:</label>
@@ -260,7 +241,7 @@ const Empleado = () => {
                 </select>
               </div>
               <div>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: 'bold' }}>Agencia / Destino:</label>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: 'bold' }}>Sede Logística:</label>
                 <select 
                   name="destinoIndex" 
                   value={paquete.destinoIndex} 
@@ -274,15 +255,15 @@ const Empleado = () => {
               </div>
             </div>
 
-            {/* Cuadro informativo dinámico sobre la Agencia */}
+            {/* Cuadro informativo dinámico sobre la Sede Seleccionada */}
             <div style={{ backgroundColor: '#eff6ff', borderLeft: '4px solid #3b82f6', padding: '12px', borderRadius: '4px', marginBottom: '16px', fontSize: '13px', color: '#1e40af' }}>
-              <strong>🗓️ Horario de Agencia:</strong> {infoDestinoSeleccionado.horario} <br />
-              <strong>📍 Lugar de entrega:</strong> {infoDestinoSeleccionado.lugar}
+              <strong>🗓️ Horario de Atención:</strong> {infoDestinoSeleccionado.horario} <br />
+              <strong>📍 Punto de Control:</strong> {infoDestinoSeleccionado.lugar}
             </div>
 
             <div style={{ marginBottom: '24px' }}>
               <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: 'bold' }}>Indicaciones adicionales de la dirección:</label>
-              <input type="text" name="direccionDetalle" value={paquete.direccionDetalle} onChange={handleChange} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #d1d5db' }} placeholder="Ej. Detrás de la catedral, portón negro" />
+              <input type="text" name="direccionDetalle" value={paquete.direccionDetalle} onChange={handleChange} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #d1d5db' }} placeholder="Ej. Detrás de la alcaldía, portón negro" />
             </div>
 
             <button type="submit" style={{ width: '100%', backgroundColor: '#10b981', color: 'white', padding: '12px', borderRadius: '6px', border: 'none', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer' }}>
@@ -325,11 +306,11 @@ const Empleado = () => {
             </p>
             
             <p style={{ fontSize: '13px', color: '#93c5fd', marginTop: '6px', fontWeight: 'bold' }}>
-              📍 Destino: {infoDestinoSeleccionado.nombre}
+              📍 Sede Destino: {infoDestinoSeleccionado.nombre}
             </p>
             
             {tarifaCalculada > 0 && (
-              <button onClick={() => alert('Encomienda Guardada con la info oficial de horarios e importación de datos.')} style={{ marginTop: '20px', backgroundColor: 'white', color: '#1e3a8a', padding: '12px 24px', borderRadius: '6px', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', width: '100%', maxWidth: '320px' }}>
+              <button onClick={() => alert('Encomienda Guardada con la info oficial de las 14 sedes del país.')} style={{ marginTop: '20px', backgroundColor: 'white', color: '#1e3a8a', padding: '12px 24px', borderRadius: '6px', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', width: '100%', maxWidth: '320px' }}>
                 Confirmar y Generar Guía de Ruta
               </button>
             )}
