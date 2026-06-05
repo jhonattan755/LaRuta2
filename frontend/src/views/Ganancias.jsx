@@ -1,214 +1,290 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState } from 'react';
-import { Box, Truck } from 'lucide-react';
-import { Login } from './views/Login';
-import Empleado from './views/Empleado'; 
-import Inicio from './views/Inicio';
-import Ganancias from './views/Ganancias';
+import { useState } from "react";
+import { 
+  LayoutDashboard, 
+  Truck, 
+  Map, 
+  DollarSign, 
+  TrendingUp, 
+  Users, 
+  AlertTriangle, 
+  Search, 
+  Bell, 
+  Plus, 
+  Settings, 
+  Download, 
+  Save 
+} from "lucide-react";
 
-// ─── 1. COMPONENTE: INICIO USUARIO (VISTA CON IMÁGENES E INFORMACIÓN) ───
-function InicioUsuario() {
-  const [vistaActual, setVistaActual] = useState('inicio');
+function Ganancias() {
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const infoPaquete = {
-    codigo: "LR-SV-845CC9",
-    origen: "Agencia San Salvador Centro",
-    destino: "Entrega Domicilio - Santa Ana",
-    fechaEnvio: "03 Jun 2026",
-    repartidor: "Carlos Mendoza",
-    repartidorTelefono: "+503 7123-4567",
-    pasos: [
-      { id: 1, titulo: "Recibido en Agencia", desc: "Paquete registrado con éxito", hora: "08:30 AM", completado: true },
-      { id: 2, titulo: "En Ruta de Distribución", desc: "La unidad va sobre la Carretera Panamericana", hora: "02:15 PM", completado: true },
-      { id: 3, titulo: "En Manos del Repartidor", desc: "Listo para entregar en destino", hora: "En progreso", completado: false },
-    ]
-  };
+  const [rates, setRates] = useState([
+    { id: 1, dept: "San Salvador", difficulty: "Low (Urban)", color: "bg-blue-50 text-blue-600 border-blue-200", multiplier: "1.00x", surcharges: "None" },
+    { id: 2, dept: "La Libertad", difficulty: "Medium (Coast)", color: "bg-cyan-50 text-cyan-600 border-cyan-200", multiplier: "1.15x", surcharges: "Fuel Adj. (+2%)" },
+    { id: 3, dept: "Santa Ana", difficulty: "Medium (Highland)", color: "bg-indigo-50 text-indigo-600 border-indigo-200", multiplier: "1.10x", surcharges: "None" },
+    { id: 4, dept: "Chalatenango", difficulty: "High (Mountain)", color: "bg-orange-50 text-orange-600 border-orange-200", multiplier: "1.45x", surcharges: "Distance Levy" },
+    { id: 5, dept: "San Miguel", difficulty: "Medium (East)", color: "bg-purple-50 text-purple-600 border-purple-200", multiplier: "1.25x", surcharges: "Regional Tax" },
+  ]);
+
+  const shipments = [
+    { id: "SV-9921-X9", status: "In Transit", statusColor: "bg-emerald-100 text-emerald-700", eta: "14:30 · San Salvador", progress: "w-3/4 bg-blue-600" },
+    { id: "SV-8842-P2", status: "Pick-up", statusColor: "bg-orange-100 text-orange-700", eta: "Awaiting Courier · Santa Tecla", progress: "w-1/4 bg-orange-500" },
+    { id: "SV-7712-L1", status: "Delayed", statusColor: "bg-rose-100 text-rose-700", eta: "Weather Warning · La Unión", progress: "w-1/2 bg-rose-500" },
+    { id: "SV-1123-Z0", status: "In Transit", statusColor: "bg-emerald-100 text-emerald-700", eta: "16:45 · San Miguel", progress: "w-5/6 bg-blue-600" },
+  ];
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-800 font-sans flex flex-col">
-      {/* Encabezado */}
-      <header className="bg-[#111827] text-white sticky top-0 z-50 shadow-md px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => setVistaActual('inicio')}>
-          <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-lg">📍</div>
-          <div>
-            <h2 className="text-lg font-black tracking-wider m-0 leading-none">LA RUTA</h2>
-            <span className="text-[9px] text-slate-400 font-bold tracking-widest block">CLIENTES SV</span>
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex">
+      
+      {/* ─── BARRA LATERAL IZQUIERDA ─── */}
+      <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between hidden md:flex">
+        <div>
+          {/* Logo */}
+          <div className="p-6 flex items-center gap-3 border-b border-slate-100">
+            <div className="w-8 h-8 bg-blue-900 rounded-lg flex items-center justify-center text-white font-bold">
+              📦
+            </div>
+            <span className="text-xl font-black tracking-tight text-slate-900">Logistics</span>
+          </div>
+
+          {/* Menú de Navegación */}
+          <nav className="p-4 space-y-1">
+            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl bg-blue-50 text-blue-900 transition-all">
+              <LayoutDashboard size={18} /> Dashboard
+            </button>
+            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all">
+              <Truck size={18} /> Shipments
+            </button>
+            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all">
+              <Map size={18} /> Routes
+            </button>
+            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all">
+              <DollarSign size={18} /> Rate Manager
+            </button>
+            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all">
+              <TrendingUp size={18} /> Analytics
+            </button>
+          </nav>
+        </div>
+
+        {/* Footer de la Barra Lateral */}
+        <div className="p-4 border-t border-slate-100 space-y-4">
+          <button className="w-full bg-orange-800 hover:bg-orange-900 text-white font-bold text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all">
+            <Plus size={16} /> New Shipment
+          </button>
+          <button className="w-full flex items-center gap-3 px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-all">
+            <Settings size={18} /> Settings
+          </button>
+          <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 flex items-center gap-3">
+            <div className="w-9 h-9 bg-blue-600 rounded-lg text-white font-bold flex items-center justify-center text-xs shadow-sm">
+              AD
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-slate-900">Admin User</h4>
+              <p className="text-[10px] text-slate-500 font-medium">El Salvador Hub</p>
+            </div>
           </div>
         </div>
-        <nav className="flex items-center gap-6">
-          <button 
-            onClick={() => setVistaActual('inicio')}
-            className={`text-sm font-bold tracking-wide transition-all cursor-pointer ${vistaActual === 'inicio' ? 'text-[#5bc0be] border-b-2 border-[#5bc0be] pb-1' : 'text-slate-300 hover:text-white'}`}
-          >
-            Inicio
-          </button>
-          <button 
-            onClick={() => setVistaActual('rastreo')}
-            className={`text-sm font-extrabold tracking-wide flex items-center gap-2 px-4 py-1.5 rounded-full transition-all cursor-pointer relative ${
-              vistaActual === 'rastreo' ? 'bg-[#5bc0be] text-[#111827]' : 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-            }`}
-          >
-            <Box size={16} />
-            Mi Paquete
-            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-            </span>
-          </button>
-        </nav>
-      </header>
+      </aside>
 
-      {/* Contenido Dinámico */}
-      <main className="flex-1">
-        {vistaActual === 'inicio' && (
-          <div className="animate-fadeIn">
-            <div className="p-8 max-w-6xl mx-auto">
+      {/* ─── CONTENIDO PRINCIPAL ─── */}
+      <main className="flex-1 flex flex-col min-w-0">
+        
+        {/* Barra Superior de Búsqueda */}
+        <header className="bg-white border-b border-slate-200 h-16 px-8 flex items-center justify-between gap-4 sticky top-0 z-10">
+          <div className="relative w-full max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+            <input 
+              type="text" 
+              placeholder="Track shipment ID..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-sm outline-none focus:border-blue-500 focus:bg-white transition-all"
+            />
+          </div>
+          <button className="p-2 text-slate-400 hover:text-slate-600 relative rounded-xl hover:bg-slate-50">
+            <Bell size={20} />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full"></span>
+          </button>
+        </header>
+
+        {/* Contenedor del Dashboard */}
+        <div className="p-8 space-y-8 flex-1 overflow-y-auto max-w-7xl w-full mx-auto">
+          
+          <div>
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight">Logistics Control Panel</h1>
+            <p className="text-xs font-semibold text-slate-500 mt-0.5">Real-time distribution metrics for El Salvador</p>
+          </div>
+
+          {/* ─── TARJETAS DE MÉTRICAS (KPIs) ─── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div className="flex justify-between items-start text-slate-400">
+                <span className="text-[11px] font-black uppercase tracking-wider">Total Deliveries Today</span>
+                <Truck size={20} className="text-slate-700" />
+              </div>
+              <div className="mt-4">
+                <h3 className="text-3xl font-black text-slate-900 leading-none">1,284</h3>
+                <span className="text-[11px] text-emerald-600 font-bold flex items-center gap-1 mt-2">
+                  📈 +12.5% from yesterday
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div className="flex justify-between items-start text-slate-400">
+                <span className="text-[11px] font-black uppercase tracking-wider">Active Couriers</span>
+                <Users size={20} className="text-amber-600" />
+              </div>
+              <div className="mt-4">
+                <h3 className="text-3xl font-black text-slate-900 leading-none">156</h3>
+                <span className="text-[11px] text-slate-500 font-bold flex items-center gap-1 mt-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span> 94% capacity utilization
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div className="flex justify-between items-start text-slate-400">
+                <span className="text-[11px] font-black uppercase tracking-wider">Pending Issues</span>
+                <AlertTriangle size={20} className="text-rose-500" />
+              </div>
+              <div className="mt-4">
+                <h3 className="text-3xl font-black text-rose-600 leading-none">08</h3>
+                <span className="text-[11px] text-rose-600 font-bold block mt-2">
+                  ⚠ 3 Critical / 5 Delayed
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div className="flex justify-between items-start text-slate-400">
+                <span className="text-[11px] font-black uppercase tracking-wider">Daily Revenue</span>
+                <DollarSign size={20} className="text-blue-600" />
+              </div>
+              <div className="mt-4">
+                <h3 className="text-3xl font-black text-slate-900 leading-none">$4,820</h3>
+                <span className="text-[11px] text-slate-500 font-medium block mt-2">
+                  Avg. $3.75 per delivery
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* ─── MAPA Y ENVÍOS ─── */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <div className="lg:col-span-2 bg-blue-50 border border-blue-100 rounded-2xl p-6 relative min-h-[350px] flex flex-col justify-between overflow-hidden">
+              <div className="relative z-10 bg-white border border-slate-200 rounded-xl p-3 self-start shadow-sm">
+                <h4 className="text-xs font-black text-slate-900 flex items-center gap-1.5">🗺 Live Network View</h4>
+                <p className="text-[10px] text-slate-500 font-medium mt-0.5">Showing 156 couriers in 14 departments</p>
+              </div>
+
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="w-3 h-3 bg-orange-500 rounded-full absolute left-1/4 top-1/3 animate-ping opacity-75"></div>
+                <div className="w-2.5 h-2.5 bg-orange-600 rounded-full absolute left-1/4 top-1/3 shadow-sm"></div>
+                <div className="w-2.5 h-2.5 bg-orange-600 rounded-full absolute left-1/3 top-1/2 shadow-sm"></div>
+                <div className="w-2.5 h-2.5 bg-orange-600 rounded-full absolute left-1/2 top-1/3 shadow-sm"></div>
+                <div className="w-3 h-3 bg-blue-900 rounded-full absolute left-1/3 top-1/3 border-2 border-white shadow-md"></div>
+                <div className="w-2.5 h-2.5 bg-orange-600 rounded-full absolute right-1/4 top-2/3 shadow-sm"></div>
+              </div>
+
+              <div className="relative z-10 bg-white border border-slate-200 rounded-xl p-3 self-end flex gap-4 text-[10px] font-bold shadow-sm">
+                <span className="flex items-center gap-1.5 text-slate-700"><span className="w-2 h-2 rounded-full bg-orange-600"></span> Active Transit</span>
+                <span className="flex items-center gap-1.5 text-slate-700"><span className="w-2 h-2 rounded-full bg-blue-900"></span> Logistics Hub</span>
+              </div>
+            </div>
+
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-sm">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-sm font-black text-slate-900">Live Shipments</h3>
+                <button className="text-xs font-bold text-blue-600 hover:underline">View All</button>
+              </div>
               
-              {/* Banner de Bienvenida */}
-              <div className="bg-gradient-to-r from-[#1e3a8a] to-[#0f172a] text-white rounded-3xl p-8 md:p-12 shadow-xl mb-12 relative overflow-hidden">
-                <div className="relative z-10">
-                  <span className="bg-blue-500/20 text-blue-300 border border-blue-500/30 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-                    Panel de Operación Logística Activo
-                  </span>
-                  <h1 className="text-3xl md:text-5xl font-black mt-4 mb-4 tracking-tight">¿Qué hacemos en La Ruta?</h1>
-                  <p className="text-slate-300 text-sm md:text-base max-w-2xl leading-relaxed">
-                    Somos una red especializada en la **logística integral y distribución express** dentro de El Salvador. Nos encargamos de recolectar, clasificar, transportar y entregar tus paquetes comerciales y encomiendas familiares de manera ágil, eficiente y con total seguridad.
-                  </p>
-                </div>
-                <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-600/10 rounded-full blur-2xl"></div>
+              <div className="space-y-3 flex-1">
+                {shipments.map((ship, idx) => (
+                  <div key={idx} className="border border-slate-100 rounded-xl p-3.5 space-y-2 hover:bg-slate-50 transition-all">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-black text-slate-900">{ship.id}</span>
+                      <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${ship.statusColor}`}>{ship.status}</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-medium">{ship.eta}</p>
+                    <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                      <div className={`h-full rounded-full ${ship.progress}`}></div>
+                    </div>
+                  </div>
+                ))}
               </div>
-
-              {/* Sección de Tarjetas con Imágenes Reales */}
-              <div className="mb-6">
-                <h3 className="text-xl font-black text-slate-900 tracking-tight mb-2">Nuestras Líneas de Distribución</h3>
-                <p className="text-xs text-slate-500 mb-6">Gestionamos envíos adaptados a cada necesidad con cobertura en los 14 departamentos.</p>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {/* Tarjeta 1 */}
-                  <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs flex flex-col">
-                    <div className="h-44 w-full overflow-hidden relative bg-slate-900">
-                      <img 
-                        src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=500&q=80" 
-                        alt="Centro de Distribución La Ruta" 
-                        className="w-full h-full object-cover opacity-90"
-                      />
-                      <span className="absolute top-3 left-3 bg-blue-600 text-white font-extrabold text-[9px] px-2.5 py-0.5 rounded-md uppercase tracking-wider">Carga Comercial</span>
-                    </div>
-                    <div className="p-4 flex-1">
-                      <h4 className="font-bold text-sm text-slate-800 mb-1">Distribución Al por Mayor</h4>
-                      <p className="text-[11px] text-slate-500 leading-relaxed">Movilización masiva interdepartamental para abastecimiento de inventarios y negocios.</p>
-                    </div>
-                  </div>
-
-                  {/* Tarjeta 2 */}
-                  <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs flex flex-col">
-                    <div className="h-44 w-full overflow-hidden relative bg-slate-900">
-                      <img 
-                        src="https://images.unsplash.com/photo-1549194388-f61be84a6e9e?auto=format&fit=crop&w=500&q=80" 
-                        alt="Entrega Última Milla" 
-                        className="w-full h-full object-cover opacity-90"
-                      />
-                      <span className="absolute top-3 left-3 bg-indigo-600 text-white font-extrabold text-[9px] px-2.5 py-0.5 rounded-md uppercase tracking-wider">Última Milla</span>
-                    </div>
-                    <div className="p-4 flex-1">
-                      <h4 className="font-bold text-sm text-slate-800 mb-1">Envíos Corporativos y E-commerce</h4>
-                      <p className="text-[11px] text-slate-500 leading-relaxed">Entregas directo a domicilio para optimizar los tiempos de entrega de tus ventas digitales.</p>
-                    </div>
-                  </div>
-
-                  {/* Tarjeta 3 */}
-                  <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs flex flex-col">
-                    <div className="h-44 w-full overflow-hidden relative bg-slate-900">
-                      <img 
-                        src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=500&q=80" 
-                        alt="Flota de transporte" 
-                        className="w-full h-full object-cover opacity-90"
-                      />
-                      <span className="absolute top-3 left-3 bg-emerald-600 text-white font-extrabold text-[9px] px-2.5 py-0.5 rounded-md uppercase tracking-wider">Control GPS</span>
-                    </div>
-                    <div className="p-4 flex-1">
-                      <h4 className="font-bold text-sm text-slate-800 mb-1">Seguridad y Monitoreo</h4>
-                      <p className="text-[11px] text-slate-500 leading-relaxed">Cada unidad cuenta con seguimiento satelital activo para garantizar el resguardo de la mercancía.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
             </div>
           </div>
-        )}
 
-        {/* Vista de Rastreo */}
-        {vistaActual === 'rastreo' && (
-          <div className="w-full h-[calc(100vh-68px)] flex flex-col md:flex-row overflow-hidden">
-            <div className="flex-1 bg-slate-200 relative min-h-[300px] md:min-h-full">
-              <div className="absolute inset-0 bg-[#e5e9f0] bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:16px_16px] flex items-center justify-center">
-                <svg className="absolute w-full h-full opacity-40 stroke-blue-500 stroke-dasharray-4 fill-none" viewBox="0 0 800 500">
-                  <path d="M100,300 Q250,150 450,280 T700,200" strokeWidth="4" />
-                </svg>
-                <div className="absolute left-[15%] top-[55%] text-center">
-                  <div className="w-4 h-4 bg-blue-600 rounded-full border-4 border-white shadow-md mx-auto"></div>
-                  <span className="bg-white text-[10px] font-bold px-2 py-0.5 rounded shadow-xs block mt-1">San Salvador</span>
-                </div>
-                <div className="absolute left-[45%] top-[42%] text-center animate-bounce">
-                  <div className="bg-[#111827] text-white p-2.5 rounded-full shadow-xl border-2 border-[#5bc0be] flex items-center justify-center">
-                    <Truck size={20} className="text-[#5bc0be]" />
-                  </div>
-                  <div className="bg-[#111827] text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full tracking-wider mt-1 border border-slate-700 shadow-sm flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>EN RUTA
-                  </div>
-                </div>
-                <div className="absolute right-[20%] top-[35%] text-center">
-                  <div className="w-5 h-5 bg-emerald-500 rounded-full border-4 border-white shadow-md mx-auto flex items-center justify-center text-white text-[8px]">⭐</div>
-                  <span className="bg-white text-[10px] font-bold px-2 py-0.5 rounded shadow-xs block mt-1">Santa Ana</span>
-                </div>
+          {/* ─── SECCIÓN: RATE MANAGER ─── */}
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50">
+              <div>
+                <h3 className="text-base font-black text-slate-900">Rate Manager</h3>
+                <p className="text-xs text-slate-500 font-medium mt-0.5">Adjust pricing multipliers based on operational difficulty</p>
+              </div>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white border border-slate-200 text-slate-700 font-bold text-xs px-4 py-2 rounded-xl hover:bg-slate-50 transition-all">
+                  <Download size={14} /> Export CSV
+                </button>
+                <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-blue-950 text-white font-bold text-xs px-4 py-2 rounded-xl hover:bg-blue-900 shadow-sm transition-all">
+                  <Save size={14} /> Save Changes
+                </button>
               </div>
             </div>
 
-            <div className="w-full md:w-[420px] bg-white border-t md:border-t-0 md:border-l border-slate-200 flex flex-col h-full overflow-y-auto">
-              <div className="p-6 border-b border-slate-100 bg-slate-50/50">
-                <span className="text-[10px] font-black tracking-widest text-blue-600 bg-blue-50 px-2 py-1 rounded-md">Código de Rastreo</span>
-                <h2 className="text-xl font-black text-slate-800 mt-1.5 mb-3">{infoPaquete.codigo}</h2>
-              </div>
-              <div className="p-6 flex-1 border-b border-slate-100">
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Estado del Trayecto</h3>
-                <div className="relative pl-6 space-y-6">
-                  <div className="absolute left-[9px] top-2 bottom-2 w-0.5 bg-slate-200"></div>
-                  {infoPaquete.pasos.map((paso) => (
-                    <div key={paso.id} className="relative flex gap-4 items-start">
-                      <div className={`absolute -left-[23px] w-5 h-5 rounded-full flex items-center justify-center border-4 border-white shadow-xs z-10 ${paso.completado ? 'bg-blue-600' : 'bg-slate-300'}`}></div>
-                      <div className="flex-1">
-                        <div className="flex justify-between items-baseline">
-                          <h4 className="text-sm font-bold text-slate-800">{paso.titulo}</h4>
-                          <span className="text-[10px] font-semibold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">{paso.hora}</span>
-                        </div>
-                        <p className="text-xs text-slate-500 mt-0.5">{paso.desc}</p>
-                      </div>
-                    </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-100 text-[11px] font-black text-slate-400 uppercase tracking-wider bg-slate-50">
+                    <th className="py-4 px-6">Department</th>
+                    <th className="py-4 px-6">Zone Difficulty</th>
+                    <th className="py-4 px-6">Base Multiplier</th>
+                    <th className="py-4 px-6">Active Surcharges</th>
+                    <th className="py-4 px-6 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-xs font-semibold text-slate-700">
+                  {rates.map((rate) => (
+                    <tr key={rate.id} className="hover:bg-slate-50/50 transition-all">
+                      <td className="py-4 px-6 font-bold text-slate-900">{rate.dept}</td>
+                      <td className="py-4 px-6">
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${rate.color}`}>
+                          {rate.difficulty}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 font-mono text-slate-900 font-bold">{rate.multiplier}</td>
+                      <td className="py-4 px-6 text-slate-500">{rate.surcharges}</td>
+                      <td className="py-4 px-6 text-right">
+                        <button className="text-blue-600 font-bold hover:text-blue-800 transition-all">Edit</button>
+                      </td>
+                    </tr>
                   ))}
-                </div>
-              </div>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="p-4 bg-slate-50 border-t border-slate-100 text-center">
+              <button className="text-xs font-bold text-blue-900 hover:underline">
+                Show all 14 Departments
+              </button>
             </div>
           </div>
-        )}
+
+        </div>
+
+        <footer className="h-14 border-t border-slate-200 px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400 font-medium bg-white mt-auto">
+          <span>© 2026 Encomiendas SV. Logistics Excellence for El Salvador.</span>
+          <div className="flex gap-4">
+            <a href="#privacy" className="hover:underline">Privacy Policy</a>
+            <a href="#terms" className="hover:underline">Terms of Service</a>
+          </div>
+        </footer>
       </main>
     </div>
   );
 }
 
-// ─── 2. ENRUTADOR PRINCIPAL (MANTIENE TUS RUTAS ORIGINALES Y AGREGA /GANANCIAS) ───
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Inicio />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/empleado" element={<Empleado />} />
-        <Route path="/inicio-usuario" element={<InicioUsuario />} />
-        <Route path="/ganancias" element={<Ganancias />} />
-      </Routes>
-    </Router>
-  );
-}
-
-export default App;
+export default Ganancias;

@@ -1,20 +1,27 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Login } from './views/Login';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+// Importación de todas tus páginas
+import Inicio from './views/Inicio';
+import { Login } from './views/Login'; 
 import Empleado from './views/Empleado'; 
-import Inicio from './views/Inicio'; // Tu página que actúa como Admin
+import InicioUsuario from './views/InicioUsuario';
+import Ganancias from './views/Ganancias';
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* La puerta de entrada principal es tu nuevo Login oscuro */}
-        <Route path="/" element={<Login />} />
-        
-        {/* Ruta exclusiva para el Empleado / Ventanilla */}
+        {/* Tus rutas originales restablecidas */}
+        <Route path="/" element={<Inicio />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/empleado" element={<Empleado />} />
+        <Route path="/inicio-usuario" element={<InicioUsuario />} />
         
-        {/* Ruta exclusiva para el Administrador */}
-        <Route path="/admin" element={<Inicio />} />
+        {/* Tu nueva pantalla de Ganancias integrada perfectamente */}
+        <Route path="/ganancias" element={<Ganancias />} />
+
+        {/* Ruta de seguridad: Si escriben algo que no existe, redirige al inicio */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );
