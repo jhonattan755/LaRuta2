@@ -1,44 +1,21 @@
 import mongoose from 'mongoose';
 
 const UsuarioSchema = new mongoose.Schema({
-  nombre: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    lowercase: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  // 🚀 NUEVO: Campo para almacenar el número telefónico
-  telefono: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  // 🚀 NUEVO: Campo para almacenar el departamento de El Salvador
-  departamento: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  rol: {
-    type: String,
-    enum: ['usuario', 'empleado', 'administrador'],
-    default: 'usuario'
-  },
-  fechaCreacion: {
-    type: Date,
-    default: Date.now
-  }
+  names: { type: String, required: true },
+  lastNames: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true }, // 🔒 Forzamos el uso de 'password' estándar
+  role: { type: String, required: true, default: 'Empleado' },
+  status: { type: String, required: true, default: 'Activo' },
+  dui: { type: String, required: true, unique: true },
+  phone: { type: String, required: true },
+  address: { type: String },
+  birthDate: { type: String },
+  age: { type: Number },
+  nationality: { type: String, default: 'Salvadoreña' },
+  civilStatus: { type: String, default: 'Soltero/a' },
+  gender: { type: String, default: 'Masculino' },
+  bloodType: { type: String, default: 'O+' }
 });
 
-// Exportamos el modelo listo para usar en las rutas
 export const Usuario = mongoose.model('Usuario', UsuarioSchema);

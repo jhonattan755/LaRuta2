@@ -62,7 +62,7 @@ const Empleado = () => {
     ancho: '',
     alto: '',
     departamento: 'Ahuachapán',
-    destinoIndex: 0, 
+    destinoIndex: 0,
     direccionDetalle: ''
   });
 
@@ -89,11 +89,11 @@ const Empleado = () => {
   const handleTelefonoChange = (e) => {
     const inputLimpio = e.target.value.replace(/\D/g, '');
     const digitosLimitados = inputLimpio.slice(0, 8);
-    let telefonoFormateado = digitosLimitados;
+    let telephoneFormateado = digitosLimitados;
     if (digitosLimitados.length > 4) {
-      telefonoFormateado = `${digitosLimitados.slice(0, 4)}-${digitosLimitados.slice(4)}`;
+      telephoneFormateado = `${digitosLimitados.slice(0, 4)}-${digitosLimitados.slice(4)}`;
     }
-    setPaquete({ ...paquete, telefono: telefonoFormateado });
+    setPaquete({ ...paquete, telefono: telephoneFormateado });
   };
 
   const handleFotoChange = (e) => {
@@ -104,6 +104,7 @@ const Empleado = () => {
     }
   };
 
+  // --- 📐 LOGIC: CALCULO DE TARIFAS ORIGINAL ---
   const calcularTarifa = (e) => {
     e.preventDefault();
     if (paquete.tipoTamano === 'Basico') {
@@ -136,12 +137,87 @@ const Empleado = () => {
     setTarifaCalculada(total.toFixed(2));
   };
 
+  // --- 🚀 CONEXIÓN CON MONGODB: GUARDAR ENCOMIENDA ---
+  const registrarEncomiendaDB = async () => {
+    if (tarifaCalculada <= 0) {
+      alert("⚠️ Primero debes calcular la tarifa de envío antes de confirmar.");
+      return;
+    }
+
+    // Calcular la fecha límite de forma automática usando JavaScript nativo
+    const hoy = new Date();
+    if (infoDestinoSeleccionado.duracion === 'Paquete Dura 3 Dias') {
+      hoy.setDate(hoy.getDate() + 3);
+    } else {
+      hoy.setDate(hoy.getDate() + 5); // Por defecto 5 días si está retenido o es lejano
+    }
+    const fechaLimiteFormateada = hoy.toISOString().split('T')[0];
+
+    // Empaquetamos los datos exactamente como los espera el modelo del Backend
+    const datosEncomienda = {
+      remitenteNombre: paquete.cliente.trim(),
+      remitenteDui: "00000000-0", // Campo por defecto requerido por el modelo (O puedes añadir un input para recolectarlo)
+      remitenteTelefono: paquete.telefono,
+      origenAgencia: "Sede Despacho Central", 
+      destinatarioNombre: paquete.cliente.trim() + " (Filtro Destino)", // Adaptado a tu input único
+      destinatarioTelefono: paquete.telefono,
+      destinoDireccion: paquete.direccionDetalle.trim() || "Entrega en Agencia Oficial",
+      destinoAgencia: infoDestinoSeleccionado.nombre,
+      tipoPaquete: paquete.producto,
+      pesoLibras: paquete.tipoTamano === 'Basico' ? 2 : (parseFloat(paquete.peso) || 1),
+      contenidoDescripcion: `Envío de ${paquete.producto}. Dimensiones: Volumétrico de control general.`,
+      costoEnvio: parseFloat(tarifaCalculada),
+      estadoPago: "Pagado", // Por defecto al despacharse en caja
+      estadoEnvio: "En Agencia",
+      fechaLimiteEntrega: fechaLimiteFormateada
+    };
+
+    try {
+      const respuesta = await fetch('http://localhost:5000/api/encomiendas/crear', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datosEncomienda)
+      });
+
+      const resultado = await respuesta.json();
+
+      if (respuesta.ok) {
+        alert(`🎉 ¡Encomienda guardada exitosamente en MongoDB Atlas!\nCódigo de Seguimiento Asignado: ${resultado.codigoSeguimiento}`);
+        resetFormulario();
+      } else {
+        alert(`Error del Servidor: ${resultado.mensaje}`);
+      }
+    } catch (error) {
+      console.error(error);
+      alert('❌ Error crítico de comunicación: Verifica que el backend esté encendido en el puerto 5000.');
+    }
+  };
+
+  const resetFormulario = () => {
+    setPaquete({
+      cliente: '',
+      telefono: '',
+      producto: 'Ropa',
+      tipoTamano: 'Medidas',
+      peso: '',
+      largo: '',
+      ancho: '',
+      alto: '',
+      departamento: 'Ahuachapán',
+      destinoIndex: 0, 
+      direccionDetalle: ''
+    });
+    setTarifaCalculada(0);
+    setFotoPreview(null);
+    setNombreArchivo('');
+  };
+
   const infoDestinoSeleccionado = destinosReales[paquete.departamento][paquete.destinoIndex] || destinosReales[paquete.departamento][0];
 
   return (
     <div style={{ backgroundColor: '#f3f4f6', minHeight: '100vh', padding: '24px', fontFamily: 'sans-serif' }}>
       
-      {/* HEADER PRINCIPAL MODIFICADO CON BOTÓN DE REGRESO INTERNO */}
+      {/* HEADER PRINCIPAL */}
       <header style={{ backgroundColor: '#1e3a8a', color: 'white', padding: '16px 24px', borderRadius: '8px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <button 
@@ -255,7 +331,7 @@ const Empleado = () => {
               </div>
             </div>
 
-            {/* Cuadro informativo dinámico sobre la Sede Seleccionada */}
+            {/* Cuadro informativo dinámico */}
             <div style={{ backgroundColor: '#eff6ff', borderLeft: '4px solid #3b82f6', padding: '12px', borderRadius: '4px', marginBottom: '16px', fontSize: '13px', color: '#1e40af' }}>
               <strong>🗓️ Horario de Atención:</strong> {infoDestinoSeleccionado.horario} <br />
               <strong>📍 Punto de Control:</strong> {infoDestinoSeleccionado.lugar}
@@ -272,7 +348,7 @@ const Empleado = () => {
           </form>
         </div>
 
-        {/* Columna Derecha: Tarjeta de Cotización y Foto */}
+        {/* Columna Derecha: Tarjeta de Cotización */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <div style={{ backgroundColor: '#1e3a8a', color: 'white', padding: '32px', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             <h2 style={{ marginTop: 0, fontSize: '20px', color: '#93c5fd' }}>Costo Estimado de Encomienda</h2>
@@ -289,7 +365,7 @@ const Empleado = () => {
               </div>
             )}
 
-            {/* Alerta de Retención y Días que dura en Agencia */}
+            {/* Alerta de Retención */}
             <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', padding: '14px', borderRadius: '8px', width: '100%', maxWidth: '320px', marginBottom: '16px', fontSize: '13px' }}>
               <span style={{ display: 'block', fontWeight: 'bold', color: '#fca5a5', marginBottom: '4px' }}>
                 ⚠️ TIEMPO LÍMITE EN AGENCIA:
@@ -310,7 +386,11 @@ const Empleado = () => {
             </p>
             
             {tarifaCalculada > 0 && (
-              <button onClick={() => alert('Encomienda Guardada con la info oficial de las 14 sedes del país.')} style={{ marginTop: '20px', backgroundColor: 'white', color: '#1e3a8a', padding: '12px 24px', borderRadius: '6px', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', width: '100%', maxWidth: '320px' }}>
+              <button 
+                type="button" 
+                onClick={registrarEncomiendaDB} 
+                style={{ marginTop: '20px', backgroundColor: 'white', color: '#1e3a8a', padding: '12px 24px', borderRadius: '6px', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px', width: '100%', maxWidth: '320px' }}
+              >
                 Confirmar y Generar Guía de Ruta
               </button>
             )}

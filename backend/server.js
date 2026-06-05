@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import usuarioRoutes from './routes/usuarioRoutes.js';
+// 🎯 CORRECCIÓN AQUÍ: Apuntamos al nombre exacto de tu archivo en plural
+import encomiendaRoutes from './routes/encomiendasRoutes.js'; 
 
 // Forzar la carga explícita del archivo .env
 dotenv.config();
@@ -12,10 +14,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Enlace de las rutas del Login
+// Enlace de las rutas de tu sistema
 app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/encomiendas', encomiendaRoutes); // 👈 Conexión máster para los envíos
 
-const PORT = process.env.PORT || 5000;
+// --- DECLARACIÓN FIJA Y ÚNICA DEL PUERTO 5000 ---
+const PORT = 5000; 
 const URI = process.env.MONGO_URI;
 
 if (!URI) {
@@ -23,11 +27,13 @@ if (!URI) {
   process.exit(1);
 }
 
-// Intentar la conexión máster
+// --- CONEXIÓN MÁSTER A MONGODB ATLAS Y ARRANQUE DEL SERVIDOR ---
 mongoose.connect(URI)
   .then(() => {
     console.log('☁️  ¡CONEXIÓN EXITOSA! Conectado a MongoDB Atlas en la nube de forma limpia.');
-    app.listen(PORT, () => console.log(`📡 Servidor de La Ruta corriendo en el puerto ${PORT}`));
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor backend de La Ruta corriendo en el puerto ${PORT}`);
+    });
   })
   .catch((error) => {
     console.error('❌ Error fatal al conectar a MongoDB Atlas:', error.message);

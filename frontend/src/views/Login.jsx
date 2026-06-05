@@ -32,14 +32,17 @@ export function Login() {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
-        // El backend lee el rol guardado en MongoDB Atlas y nos lo devuelve
-        if (datos.rol === 'administrador') {
+        // 🎯 CORRECCIÓN MÁSTER: Forzamos el rol a minúsculas para blindarlo contra mayúsculas de MongoDB Atlas
+        const rolNormalizado = datos.rol ? datos.rol.toLowerCase() : '';
+
+        // Ahora las comparaciones son 100% seguras y exactas
+        if (rolNormalizado === 'administrador') {
           navigate('/ganancias');
-        } else if (datos.rol === 'empleado') {
+        } else if (rolNormalizado === 'empleado') {
           navigate('/inicio-empleado');
-        } else if (datos.rol === 'repartidor') {
+        } else if (rolNormalizado === 'repartidor') {
           navigate('/repartidor');
-        } else if (datos.rol === 'usuario') {
+        } else if (rolNormalizado === 'usuario') {
           navigate('/inicio-usuario');
         } else {
           navigate('/inicio-usuario');
@@ -58,10 +61,10 @@ export function Login() {
     /* 🚀 CONTENEDOR TOTAL A PANTALLA COMPLETA */
     <div className="min-h-screen w-screen bg-[#111827] flex font-sans overflow-hidden">
       
-      {/* 📦 ESTRUCTURA EXTENDIDA A TODO EL ENTORNO (Corregido w-col-12 por w-full) */}
+      {/* 📦 ESTRUCTURA EXTENDIDA A TODO EL ENTORNO */}
       <div className="w-full grid grid-cols-1 md:grid-cols-12 min-h-screen">
         
-        {/* LA MITAD IZQUIERDA: Ocupa el 50% de la pantalla completa, con curva masiva y foto real de fondo */}
+        {/* LA MITAD IZQUIERDA */}
         <div 
           className="hidden md:flex md:col-span-6 p-16 flex-col justify-between relative bg-cover bg-center rounded-r-[80px] lg:rounded-r-[140px] shadow-2xl z-10"
           style={{ 
@@ -80,7 +83,7 @@ export function Login() {
             </div>
           </div>
 
-          {/* Bloque de Información Centralizado sobre la imagen */}
+          {/* Bloque de Información Centralizado */}
           <div className="max-w-md my-auto border-l-4 border-[#1e3a8a] pl-6 py-4 bg-white/40 backdrop-blur-sm rounded-r-xl">
             <h3 className="text-2xl font-black text-slate-800 mb-2 uppercase tracking-tight">
               Control de Encomiendas
@@ -97,10 +100,9 @@ export function Login() {
 
         </div>
 
-        {/* LA MITAD DERECHA: Tu Formulario Oscuro extendido en la otra mitad de la pantalla */}
+        {/* LA MITAD DERECHA: Tu Formulario Oscuro */}
         <div className="col-span-1 md:col-span-6 p-8 sm:p-12 lg:p-24 flex flex-col justify-between bg-[#111827] relative z-0">
           
-          {/* Div para equilibrar el espacio vertical */}
           <div className="hidden md:block"></div>
 
           {/* El contenedor del Formulario de Login */}
@@ -142,7 +144,7 @@ export function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
 
-              {/* 3. 💡 CHECKBOX INTEGRADO CON TU DISEÑO OSCURO */}
+              {/* 3. CHECKBOX */}
               <div className="flex items-center mb-2 px-2">
                 <input
                   id="recordarme"
@@ -164,7 +166,7 @@ export function Login() {
                 Ingresar 
               </button>
 
-              {/* 🆕 NUEVO BOTÓN COMPLETO: REGISTRAR */}
+              {/* BOTÓN REGISTRAR */}
               <button 
                 type="button"
                 onClick={() => navigate('/registro')}
@@ -184,7 +186,7 @@ export function Login() {
             </div>
           </div>
 
-          {/* Información de soporte técnica en la esquina inferior */}
+          {/* Información de soporte técnica */}
           <div className="text-center md:text-right text-xs text-slate-600 mt-12 md:mt-0 font-semibold tracking-wide">
             ¿Problemas de acceso? soporte@laruta.sv
           </div>

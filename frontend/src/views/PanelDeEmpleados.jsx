@@ -1,44 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Users, 
   UserPlus, 
   Trash2, 
   Edit3, 
-  Key, 
-  CheckCircle, 
-  XCircle,
-  Search,
-  HeartPulse
+  Search
 } from "lucide-react";
 
 function PanelDeEmpleados() {
   const [searchTerm, setSearchTerm] = useState("");
-  
-  // Estado inicial con formato correcto
-  const [employees, setEmployees] = useState([
-    { 
-      id: 1, 
-      names: "Jhonattan Ulises", 
-      lastNames: "Sanchez Martinez", 
-      email: "admin@laruta.com", 
-      pass: "admin123", 
-      role: "Administrador", 
-      status: "Activo",
-      dui: "00000000-0",
-      phone: "7000-0000",
-      address: "San Salvador, El Salvador",
-      birthDate: "2000-01-01",
-      age: 26,
-      nationality: "Salvadoreña",
-      civilStatus: "Soltero/a",
-      gender: "Masculino",
-      bloodType: "O+"
-    }
-  ]);
+  const [employees, setEmployees] = useState([]); // 🚀 Ahora inicia vacío porque vendrá de MongoDB
 
   // Estados del Formulario
   const [isEditing, setIsEditing] = useState(false);
-  const [currentId, setCurrentId] = useState(null);
+  const [currentId, setCurrentId] = useState(null); // Guardará el _id de MongoDB
   
   const [formNames, setFormNames] = useState("");
   const [formLastNames, setFormLastNames] = useState("");
@@ -58,19 +33,38 @@ function PanelDeEmpleados() {
 
   const adminCount = employees.filter(emp => emp.role === "Administrador").length;
 
-  // ─── VALIDACIONES Y MÁSCARAS EN TIEMPO REAL ───
+  // ─── 🚀 1. OBTENER EXPEDIENTES DESDE MONGO DB ───
+  // Mantén tu función fetchEmployees tal cual, solo asegúrate de que llame al puerto 5000
+  const fetchEmployees = async () => {
+    try {
+      const respuesta = await fetch("http://localhost:5000/api/usuarios/lista");
+      const datos = await respuesta.json();
+      if (respuesta.ok) {
+        setEmployees(datos);
+      }
+    } catch (error) {
+      console.error("Error al conectar con el servidor:", error);
+    }
+  };
 
-  // Filtro estricto para solo letras y espacios (Nombres, Apellidos, Nacionalidad)
+  // ✅ CORRECCIÓN MÁSTER: Llamado seguro y limpio para evitar renders en cascada
+  useEffect(() => {
+    const cargarDatos = async () => {
+      await fetchEmployees();
+    };
+    cargarDatos();
+  }, []); // El arreglo vacío asegura que solo se ejecute una vez al montar el panel
+
+
+  // ─── VALIDACIONES Y MÁSCARAS EN TIEMPO REAL ───
   const handleLetterInput = (value, setter) => {
     const onlyLetters = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, "");
     setter(onlyLetters);
   };
 
-  // Máscara automática para DUI (00000000-0) - Máximo 9 números
   const handleDuiChange = (value) => {
-    const onlyNums = value.replace(/\D/g, ""); // Remueve lo que no sea número
-    if (onlyNums.length > 9) return; // Limite estricto de números
-
+    const onlyNums = value.replace(/\D/g, "");
+    if (onlyNums.length > 9) return;
     if (onlyNums.length > 8) {
       setFormDui(`${onlyNums.slice(0, 8)}-${onlyNums.slice(8)}`);
     } else {
@@ -78,11 +72,9 @@ function PanelDeEmpleados() {
     }
   };
 
-  // Máscara automática para Teléfono (0000-0000) - Máximo 8 números
   const handlePhoneChange = (value) => {
-    const onlyNums = value.replace(/\D/g, ""); // Remueve lo que no sea número
-    if (onlyNums.length > 8) return; // Limite estricto de números
-
+    const onlyNums = value.replace(/\D/g, "");
+    if (onlyNums.length > 8) return;
     if (onlyNums.length > 4) {
       setFormPhone(`${onlyNums.slice(0, 4)}-${onlyNums.slice(4)}`);
     } else {
@@ -90,7 +82,6 @@ function PanelDeEmpleados() {
     }
   };
 
-  // Calcula la edad automáticamente según la fecha seleccionada
   const handleBirthDateChange = (dateString) => {
     setFormBirthDate(dateString);
     if (!dateString) {
@@ -108,16 +99,16 @@ function PanelDeEmpleados() {
     setFormAge(ageCalculated >= 0 ? ageCalculated : 0);
   };
 
-  // Guardar o Editar con Validación de longitudes finales
-  const handleSubmit = (e) => {
+  // ─── 💾 2. GUARDAR / ACTUALIZAR EN MONGO DB ───
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // 🔍 CORRECCIÓN AQUÍ: Validamos usando tus estados reales del formulario (formNames, formLastNames, formEmail, formPass)
     if (!formNames.trim() || !formLastNames.trim() || !formEmail.trim() || !formPass.trim()) {
       alert("⚠️ Por favor, completa todos los campos obligatorios.");
       return;
     }
 
-    // Validar longitudes reales antes de guardar
     if (formDui.length !== 10) {
       alert("⚠️ El DUI no está completo. Debe tener exactamente 9 dígitos (00000000-0).");
       return;
@@ -128,6 +119,7 @@ function PanelDeEmpleados() {
       return;
     }
 
+    // Estructuramos el objeto que viaja hacia Express
     const employeeData = {
       names: formNames.trim(),
       lastNames: formLastNames.trim(),
@@ -146,43 +138,91 @@ function PanelDeEmpleados() {
       bloodType: formBloodType
     };
 
-    if (isEditing) {
-      setEmployees(employees.map(emp => emp.id === currentId ? { ...emp, ...employeeData } : emp));
-      setIsEditing(false);
-    } else {
-      setEmployees([...employees, { id: Date.now(), ...employeeData }]);
-    }
+    try {
+      if (isEditing) {
+        // ✏️ Petición para Actualizar (PUT)
+        const respuesta = await fetch(`http://localhost:5000/api/usuarios/editar/${currentId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(employeeData)
+        });
 
-    resetForm();
+        if (respuesta.ok) {
+          alert("¡Expediente actualizado correctamente en la base de datos!");
+          fetchEmployees(); // Recargar la tabla con datos frescos
+          resetForm();
+        } else {
+          const err = await respuesta.json();
+          alert(`Error: ${err.mensaje}`);
+        }
+      } else {
+        // ➕ Petición para Crear Nuevo (POST)
+        const respuesta = await fetch("http://localhost:5000/api/usuarios/registro", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(employeeData)
+        });
+
+        if (respuesta.ok) {
+          alert("¡Expediente guardado exitosamente en MongoDB!");
+          fetchEmployees(); // Recargar tabla
+          resetForm();
+        } else {
+          const err = await respuesta.json();
+          alert(`Error: ${err.mensaje || "El correo o DUI ya existen"}`);
+        }
+      }
+    } catch (error) {
+      alert("Hubo un error de conexión con el servidor backend.");
+    }
   };
 
+
+  // ─── ✏️ 3. PREPARAR LOS CAMPOS PARA EDITAR ───
   const handleEdit = (emp) => {
     setIsEditing(true);
-    setCurrentId(emp.id);
+    setCurrentId(emp._id); // Guardamos el id único de MongoDB (_id)
     setFormNames(emp.names);
     setFormLastNames(emp.lastNames);
     setFormEmail(emp.email);
-    setFormPass(emp.pass);
+    setFormPass(emp.pass || "••••••••"); // Muestra máscara si no viene
     setFormRole(emp.role);
     setFormStatus(emp.status);
     setFormDui(emp.dui);
     setFormPhone(emp.phone);
-    setFormAddress(emp.address);
-    setFormBirthDate(emp.birthDate);
-    setFormAge(emp.age);
-    setFormNationality(emp.nationality);
-    setFormCivilStatus(emp.civilStatus);
-    setFormGender(emp.gender);
-    setFormBloodType(emp.bloodType);
+    setFormAddress(emp.address || "");
+    setFormBirthDate(emp.birthDate || "");
+    setFormAge(emp.age || "");
+    setFormNationality(emp.nationality || "Salvadoreña");
+    setFormCivilStatus(emp.civilStatus || "Soltero/a");
+    setFormGender(emp.gender || "Masculino");
+    setFormBloodType(emp.bloodType || "O+");
   };
 
-  const handleDelete = (id, role) => {
+
+  // ─── 🗑️ 4. ELIMINAR EXPEDIENTE DE MONGO DB ───
+  const handleDelete = async (id, role) => {
     if (role === "Administrador" && adminCount <= 1) {
       alert("⚠️ No puedes eliminar al único Administrador del sistema.");
       return;
     }
-    if (window.confirm("¿Estás seguro de que deseas eliminar este expediente?")) {
-      setEmployees(employees.filter(emp => emp.id !== id));
+    
+    if (window.confirm("¿Estás seguro de que deseas eliminar este expediente permanentemente de la base de datos?")) {
+      try {
+        const respuesta = await fetch(`http://localhost:5000/api/usuarios/borrar/${id}`, {
+          method: "DELETE"
+        });
+
+        if (respuesta.ok) {
+          // Remueve visualmente del estado de inmediato
+          setEmployees(employees.filter(emp => emp._id !== id));
+          alert("Expediente eliminado correctamente.");
+        } else {
+          alert("No se pudo eliminar el archivo del servidor.");
+        }
+      } catch (error) {
+        alert("Error de conexión al intentar borrar.");
+      }
     }
   };
 
@@ -206,6 +246,7 @@ function PanelDeEmpleados() {
     setFormBloodType("O+");
   };
 
+  // Buscador inteligente en tiempo real
   const filteredEmployees = employees.filter(emp => 
     `${emp.names} ${emp.lastNames}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
     emp.dui.includes(searchTerm) ||
@@ -222,13 +263,13 @@ function PanelDeEmpleados() {
             <Users className="text-blue-900" /> Expedientes de Personal - La Ruta
           </h1>
           <p className="text-xs font-semibold text-slate-500 mt-0.5">
-            Módulo con validación estricta de formatos de identidad e información local.
+            Módulo con validación estricta de formatos de identidad e información local conectado a MongoDB.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           
-          {/* ─── FORMULARIO PROTEGIDO ─── */}
+          {/* FORMULARIO */}
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4 max-h-[85vh] overflow-y-auto">
             <h3 className="text-xs font-black uppercase text-slate-400 tracking-wider flex items-center gap-2 border-b border-slate-100 pb-2">
               <UserPlus size={16} className="text-blue-900" /> 
@@ -370,7 +411,7 @@ function PanelDeEmpleados() {
             </form>
           </div>
 
-          {/* ─── TABLA DE EXPEDIENTES ─── */}
+          {/* TABLA DE EXPEDIENTES */}
           <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden lg:col-span-2">
             
             <div className="p-4 border-b border-slate-100 bg-slate-50/50 relative">
@@ -397,7 +438,7 @@ function PanelDeEmpleados() {
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-xs font-semibold text-slate-700">
                   {filteredEmployees.map((emp) => (
-                    <tr key={emp.id} className="hover:bg-slate-50/40 transition-all align-top">
+                    <tr key={emp._id} className="hover:bg-slate-50/40 transition-all align-top">
                       
                       <td className="py-4 px-4 space-y-1">
                         <div>
@@ -442,13 +483,20 @@ function PanelDeEmpleados() {
                         <button onClick={() => handleEdit(emp)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="Editar Expediente">
                           <Edit3 size={14} />
                         </button>
-                        <button onClick={() => handleDelete(emp.id, emp.role)} className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition-all" title="Eliminar Registro">
+                        <button onClick={() => handleDelete(emp._id, emp.role)} className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition-all" title="Eliminar Registro">
                           <Trash2 size={14} />
                         </button>
                       </td>
 
                     </tr>
                   ))}
+                  {filteredEmployees.length === 0 && (
+                    <tr>
+                      <td colSpan="5" className="text-center py-8 text-slate-400 font-medium">
+                        No se encontraron expedientes registrados.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

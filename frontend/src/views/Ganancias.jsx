@@ -51,14 +51,14 @@ function Ganancias() {
           <nav className="p-4 space-y-1">
   {/* Navegación corregida para coincidir con App.jsx */}
   <button 
-    onClick={() => navigate("/empleado")} 
+    onClick={() => navigate("/ganancias")} 
     className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl bg-blue-50 text-blue-900 transition-all"
   >
     <LayoutDashboard size={18} /> Menú Principal
   </button>
 
   <button 
-    onClick={() => navigate("/registro")} 
+    onClick={() => navigate("/panel-empleados")} 
     className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all"
   >
     <DollarSign size={18} /> Agregar Empleado
@@ -89,10 +89,9 @@ function Ganancias() {
 
         {/* Footer lateral */}
         <div className="p-4 border-t border-slate-100 space-y-4">
-          <button onClick={() => navigate("/nuevo-envio")} className="w-full bg-orange-800 hover:bg-orange-900 text-white font-bold text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all">
+          <button onClick={() => navigate("/empleado")} className="w-full bg-orange-800 hover:bg-orange-900 text-white font-bold text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all">
             <Plus size={16} /> Nuevo Envío
           </button>
-          {/* ... resto de tu código igual ... */}
         </div>
       </aside>
 
