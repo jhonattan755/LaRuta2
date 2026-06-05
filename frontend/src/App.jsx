@@ -9,6 +9,7 @@ import Ganancias from './views/Ganancias';
 import Repartidores from './views/Repartidores'; 
 import PanelDeEmpleados from './views/PanelDeEmpleados'; 
 import FormularioUsuario from './views/FormularioUsuario'; // <-- Importación actualizada con el nuevo nombre
+import RegistroDepaquetes from './views/RegistroDepaquetes'; // 📝 ¡Nueva importación agregada!
 
 function App() {
   return (
@@ -31,6 +32,9 @@ function App() {
 
         {/* Tu nueva pantalla de Gestión de Empleados integrada perfectamente */}
         <Route path="/panel-empleados" element={<PanelDeEmpleados />} />
+
+        {/* 📦 Nueva ruta agregada para el Historial, Edición y Búsqueda de Paquetes */}
+        <Route path="/registro-paquetes" element={<RegistroDepaquetes />} />
 
         {/* Ruta de seguridad: Si escriben algo que no existe, redirige al inicio */}
         <Route path="*" element={<Navigate to="/" replace />} />

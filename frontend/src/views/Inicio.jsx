@@ -24,6 +24,7 @@ const Inicio = () => {
           <span style={{ cursor: 'pointer', opacity: 0.7 }}>Repartidor</span>
           <span style={{ cursor: 'pointer', opacity: 0.7 }}>Panel de empleados</span>
           <span style={{ cursor: 'pointer', opacity: 0.7 }}>Panel de control</span>
+          <span style={{ cursor: 'pointer', opacity: 0.9 }}>Registro de paquetes</span>
         </div>
         <div>
           <button onClick={irAlPanel} style={{ backgroundColor: '#f59e0b', color: '#1e3a8a', border: 'none', padding: '10px 20px', borderRadius: '25px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px', transition: '0.3s' }}>

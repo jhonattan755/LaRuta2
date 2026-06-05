@@ -15,12 +15,45 @@ const FormularioUsuario = () => {
   const estiloInput = "w-full bg-[#1e293b]/50 border border-slate-700 text-slate-200 placeholder-slate-500 text-sm px-4 py-3 rounded-full focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-sans";
   const estiloLabel = "block text-xs font-bold text-slate-400 mb-2 uppercase tracking-widest px-1";
 
+  // Manejador para formatear el teléfono automáticamente mientras el usuario escribe (####-####)
+  const manejarCambioTelefono = (e) => {
+    const valorOriginal = e.target.value.replace(/\D/g, ''); // Remueve lo que no sea número
+    let valorFormateado = valorOriginal;
+
+    if (valorOriginal.length > 4) {
+      valorFormateado = `${valorOriginal.slice(0, 4)}-${valorOriginal.slice(4, 8)}`;
+    }
+
+    // Limita la longitud máxima al formato correcto de 9 caracteres (8 números + 1 guión)
+    setTelefono(valorFormateado.slice(0, 9));
+  };
+
   const manejarRegistro = async (e) => {
     e.preventDefault();
 
-    // Validación básica de campos vacíos
+    // 1. Validación básica de campos vacíos
     if (!nombre || !correo || !telefono || !departamento || !password) {
       alert('Por favor, llena todos los campos para registrarte.');
+      return;
+    }
+
+    // 2. 🔐 NUEVA VALIDACIÓN: Correo obligatorio de Gmail (@gmail.com)
+    // Convierte a minúsculas para evitar problemas si escriben GMAIL.COM
+    if (!correo.toLowerCase().endsWith('@gmail.com')) {
+      alert('Por favor, ingresa un correo electrónico válido que termine estrictamente en @gmail.com');
+      return;
+    }
+
+    // 3. Validación de Formato de Teléfono de El Salvador (####-####)
+    const expresionTelefono = /^[267][0-9]{3}-[0-9]{4}$/;
+    if (!expresionTelefono.test(telefono)) {
+      alert('Por favor, ingresa un número de teléfono válido con el formato de El Salvador (Ej: 7777-7777).');
+      return;
+    }
+
+    // 4. Validación de longitud de Contraseña (Máximo 10 caracteres)
+    if (password.length > 10) {
+      alert('La contraseña es demasiado larga. El límite máximo permitido es de 10 caracteres.');
       return;
     }
 
@@ -59,7 +92,7 @@ const FormularioUsuario = () => {
         <h1 className="text-3xl font-black mb-2 tracking-tight text-white text-center">
           Registro de Usuario
         </h1>
-        <p className="text-sm text-slate-400 mb-8 text-center1">
+        <p className="text-sm text-slate-400 mb-8 text-center">
           Completa tus datos para ingresar a La Ruta.
         </p>
         
@@ -76,12 +109,12 @@ const FormularioUsuario = () => {
             />
           </div>
 
-          {/* 2. CORREO ELECTRÓNICO */}
+          {/* 2. CORREO ELECTRÓNICO (GMAIL CORREGIDO) */}
           <div>
             <label className={estiloLabel}>Correo Electrónico</label>
             <input 
               type="email" 
-              placeholder="ejemplo@correo.com" 
+              placeholder="ejemplo@gmail.com" 
               value={correo}
               onChange={(e) => setCorreo(e.target.value)}
               className={estiloInput} 
@@ -95,7 +128,7 @@ const FormularioUsuario = () => {
               type="tel" 
               placeholder="Ej. 7777-7777" 
               value={telefono}
-              onChange={(e) => setTelefono(e.target.value)}
+              onChange={manejarCambioTelefono}
               className={estiloInput} 
             />
           </div>
@@ -132,7 +165,8 @@ const FormularioUsuario = () => {
             <label className={estiloLabel}>Contraseña de la Cuenta</label>
             <input 
               type="password" 
-              placeholder="••••••••" 
+              placeholder="Máximo 10 caracteres" 
+              maxLength={10}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={estiloInput} 
