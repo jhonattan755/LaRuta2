@@ -21,9 +21,9 @@ const Inicio = () => {
         </div>
         <div style={{ display: 'flex', gap: '30px', fontSize: '15px', fontWeight: '500' }}>
           <span style={{ cursor: 'pointer', opacity: 0.9 }}>Iniciooo</span>
-          <span style={{ cursor: 'pointer', opacity: 0.7 }}>Servicios</span>
-          <span style={{ cursor: 'pointer', opacity: 0.7 }}>Cobertura 2026</span>
-          <span style={{ cursor: 'pointer', opacity: 0.7 }}>Agencias</span>
+          <span style={{ cursor: 'pointer', opacity: 0.7 }}>Repartidor</span>
+          <span style={{ cursor: 'pointer', opacity: 0.7 }}>Panel de empleados</span>
+          <span style={{ cursor: 'pointer', opacity: 0.7 }}>Panel de control</span>
         </div>
         <div>
           <button onClick={irAlPanel} style={{ backgroundColor: '#f59e0b', color: '#1e3a8a', border: 'none', padding: '10px 20px', borderRadius: '25px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px', transition: '0.3s' }}>

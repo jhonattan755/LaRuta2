@@ -6,6 +6,7 @@ import { Login } from './views/Login';
 import Empleado from './views/Empleado'; 
 import InicioUsuario from './views/InicioUsuario';
 import Ganancias from './views/Ganancias';
+import Repartidores from './views/Repartidores'; // <-- Nueva importación de la página creada
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
         
         {/* Tu nueva pantalla de Ganancias integrada perfectamente */}
         <Route path="/ganancias" element={<Ganancias />} />
+
+        {/* Tu nueva pantalla de Repartidores integrada perfectamente */}
+        <Route path="/repartidor" element={<Repartidores />} />
 
         {/* Ruta de seguridad: Si escriben algo que no existe, redirige al inicio */}
         <Route path="*" element={<Navigate to="/" replace />} />
