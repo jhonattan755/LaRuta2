@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Importamos useNavigate
 import { 
   LayoutDashboard, 
   Truck, 
@@ -16,7 +17,10 @@ import {
 } from "lucide-react";
 
 function Ganancias() {
+  const navigate = useNavigate(); // Inicializamos el hook
   const [searchTerm, setSearchTerm] = useState("");
+
+  
 
   const [rates, setRates] = useState([
     { id: 1, dept: "San Salvador", difficulty: "Baja (Urbana)", color: "bg-blue-50 text-blue-600 border-blue-200", multiplier: "1.00x", surcharges: "Ninguno" },
@@ -33,54 +37,62 @@ function Ganancias() {
     { id: "SV-1123-Z0", status: "En Tránsito", statusColor: "bg-emerald-100 text-emerald-700", eta: "16:45 · San Miguel", progress: "w-5/6 bg-blue-600" },
   ];
 
-  return (
+ return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex">
       
       {/* ─── BARRA LATERAL IZQUIERDA ─── */}
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between hidden md:flex">
         <div>
-          {/* Logo */}
           <div className="p-6 flex items-center gap-3 border-b border-slate-100">
-            <div className="w-8 h-8 bg-blue-900 rounded-lg flex items-center justify-center text-white font-bold">
-              📦
-            </div>
+            <div className="w-8 h-8 bg-blue-900 rounded-lg flex items-center justify-center text-white font-bold">📦</div>
             <span className="text-xl font-black tracking-tight text-slate-900">La Ruta</span>
           </div>
 
-          {/* Menú de Navegación */}
           <nav className="p-4 space-y-1">
-            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl bg-blue-50 text-blue-900 transition-all">
-              <LayoutDashboard size={18} /> Menú Principal
-            </button>
-            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all">
-              <Truck size={18} /> Repartidores
-            </button>
-            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all">
-              <Map size={18} /> Panel de Empleados
-            </button>
-            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all">
-              <DollarSign size={18} /> Salir
-            </button>
-          </nav>
+  {/* Navegación corregida para coincidir con App.jsx */}
+  <button 
+    onClick={() => navigate("/empleado")} 
+    className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl bg-blue-50 text-blue-900 transition-all"
+  >
+    <LayoutDashboard size={18} /> Menú Principal
+  </button>
+
+  <button 
+    onClick={() => navigate("/registro")} 
+    className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all"
+  >
+    <DollarSign size={18} /> Agregar Empleado
+  </button>
+
+  <button 
+    onClick={() => navigate("/repartidor")} 
+    className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all"
+  >
+    <Truck size={18} /> Repartidores
+  </button>
+
+  <button 
+    onClick={() => navigate("/registro-paquetes")} 
+    className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all"
+  >
+    <Map size={18} /> Registro de paquetes
+  </button>
+
+  <button 
+    onClick={() => navigate("/login")} 
+    className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all"
+  >
+    <DollarSign size={18} /> Salir
+  </button>
+</nav>
         </div>
 
-        {/* Footer de la Barra Lateral */}
+        {/* Footer lateral */}
         <div className="p-4 border-t border-slate-100 space-y-4">
-          <button className="w-full bg-orange-800 hover:bg-orange-900 text-white font-bold text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all">
+          <button onClick={() => navigate("/nuevo-envio")} className="w-full bg-orange-800 hover:bg-orange-900 text-white font-bold text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all">
             <Plus size={16} /> Nuevo Envío
           </button>
-          <button className="w-full flex items-center gap-3 px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-all">
-            <Settings size={18} /> Configuración
-          </button>
-          <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 flex items-center gap-3">
-            <div className="w-9 h-9 bg-blue-600 rounded-lg text-white font-bold flex items-center justify-center text-xs shadow-sm">
-              AD
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-slate-900">Usuario Administrador</h4>
-              <p className="text-[10px] text-slate-500 font-medium">Centro de Control SV</p>
-            </div>
-          </div>
+          {/* ... resto de tu código igual ... */}
         </div>
       </aside>
 
