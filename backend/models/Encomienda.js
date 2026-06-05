@@ -1,23 +1,19 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const EncomiendaSchema = new mongoose.Schema({
-  remitenteNombre: { type: String, required: true, trim: true },
-  remitenteDui: { type: String, required: true, trim: true },
-  remitenteTelefono: { type: String, required: true, trim: true },
-  origenAgencia: { type: String, required: true },
-  destinatarioNombre: { type: String, required: true, trim: true },
-  destinatarioTelefono: { type: String, required: true, trim: true },
-  destinoDireccion: { type: String, required: true, trim: true },
-  destinoAgencia: { type: String, required: true },
-  tipoPaquete: { type: String, required: true },
-  pesoLibras: { type: Number, required: true },
-  contenidoDescripcion: { type: String, trim: true },
-  costoEnvio: { type: Number, required: true },
-  estadoPago: { type: String, required: true, default: 'Pagado' }, 
-  codigoSeguimiento: { type: String, required: true, unique: true }, 
-  estadoEnvio: { type: String, required: true, default: 'En Agencia' }, 
-  fechaRegistro: { type: Date, default: Date.now },
-  fechaLimiteEntrega: { type: String, required: true }
+  codigoGuia: { type: String, required: true, unique: true },
+  remitenteNombre: { type: String },
+  cliente: { type: String }, // Soporte alternativo para nombre
+  telefono: { type: String },
+  destinoAgencia: { type: String },
+  departamento: { type: String }, // Soporte alternativo para destino
+  direccionDetalle: { type: String },
+  producto: { type: String },
+  tarifaCalculada: { type: Number },
+  costoEnvio: { type: Number }, // Soporte alternativo para precio
+  estado: { type: String, default: "Pendiente" },
+  fechaRegistro: { type: Date, default: Date.now }
 });
 
-export const Encomienda = mongoose.model('Encomienda', EncomiendaSchema);
+// Mongoose registrará la colección automáticamente como "encomiendas"
+export default mongoose.model("Encomienda", EncomiendaSchema);

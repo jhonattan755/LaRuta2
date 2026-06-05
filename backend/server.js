@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import usuarioRoutes from './routes/usuarioRoutes.js';
 // 🎯 CORRECCIÓN AQUÍ: Apuntamos al nombre exacto de tu archivo en plural
-import encomiendaRoutes from './routes/encomiendasRoutes.js'; 
+import encomiendasRoutes from "./routes/encomiendasRoutes.js"; // 👈 Asegúrate de que termine en 's'
 
 // Forzar la carga explícita del archivo .env
 dotenv.config();
@@ -16,7 +16,7 @@ app.use(express.json());
 
 // Enlace de las rutas de tu sistema
 app.use('/api/usuarios', usuarioRoutes);
-app.use('/api/encomiendas', encomiendaRoutes); // 👈 Conexión máster para los envíos
+app.use('/api/encomiendas', encomiendasRoutes); // 👈 Que use exactamente la misma variable con 's'
 
 // --- DECLARACIÓN FIJA Y ÚNICA DEL PUERTO 5000 ---
 const PORT = 5000; 

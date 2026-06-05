@@ -1,7 +1,6 @@
 import express from 'express';
 // 🎯 SINCRO: Importamos el modelo cuidando la ruta de carpetas
-import { Encomienda } from '../models/encomienda.js'; 
-
+import  Encomienda  from '../models/Encomienda.js'; 
 const router = express.Router();
 
 // 📦 RUTA POST: CREAR ENCOMIENDA
@@ -35,6 +34,17 @@ router.post('/crear', async (req, res) => {
   } catch (error) {
     console.error('Error al registrar la encomienda:', error);
     res.status(500).json({ mensaje: 'Error interno en el servidor al procesar el envío.' });
+  }
+});
+
+// 📡 RUTA PARA OBTENER EL HISTORIAL GENERAL
+router.get("/historial", async (req, res) => {
+  try {
+    const lista = await Encomienda.find().sort({ fechaRegistro: -1 });
+    res.json(lista);
+  } catch (error) {
+    console.error("Error al obtener el historial:", error);
+    res.status(500).json({ mensaje: "Error interno al extraer encomiendas" });
   }
 });
 
