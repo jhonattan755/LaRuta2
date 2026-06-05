@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export function Login() {
-  // EL CEREBRO: Variables para recordar lo que el usuario escribe
+  // EL CEREBRAZO: Variables para recordar lo que el usuario escribe
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
   const [recordarme, setRecordarme] = useState(false);
@@ -38,7 +38,7 @@ export function Login() {
         } else if (datos.rol === 'empleado') {
           navigate('/empleado');
         } else {
-          alert(`¡Hola ${datos.nombre}! Tu rol aún no tiene una ruta asignada.`);
+          navigate('/inicio-usuario');
         }
       } else {
         // Muestra si la clave está mal o si el correo no existe en la nube
@@ -152,17 +152,26 @@ export function Login() {
                 </label>
               </div>
 
-              {/* BOTÓN TOTALMENTE REDONDEADO */}
+              {/* BOTÓN PRINCIPAL: INGRESAR */}
               <button 
                 type="submit"
                 className="w-full bg-[#5bc0be] hover:bg-[#46a6a4] text-[#111827] font-extrabold py-3.5 px-6 rounded-full transition-all duration-300 transform active:scale-95 shadow-xl shadow-[#5bc0be]/10 mt-6 text-sm uppercase tracking-widest"
               >
-                Ingresar al Sistema
+                Ingresar 
+              </button>
+
+              {/* 🆕 NUEVO BOTÓN COMPLETO: REGISTRAR */}
+              <button 
+                type="button"
+                onClick={() => navigate('/registro')}
+                className="w-full bg-transparent hover:bg-slate-800/40 text-[#5bc0be] border-2 border-[#5bc0be] font-extrabold py-3 px-6 rounded-full transition-all duration-300 transform active:scale-95 mt-3 text-sm uppercase tracking-widest"
+              >
+                Registrar Cuenta
               </button>
             </form>
 
             <div className="text-center mt-8">
-              <p className="text-xs text-slate-400 font-medium">
+              <p className="text-xs text-slate-500 font-medium">
                 ¿No tienes una cuenta de empleado?{' '}
                 <span className="text-blue-400 font-bold cursor-pointer hover:underline">
                   Contactar Soporte IT

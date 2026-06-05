@@ -7,7 +7,8 @@ import Empleado from './views/Empleado';
 import InicioUsuario from './views/InicioUsuario';
 import Ganancias from './views/Ganancias';
 import Repartidores from './views/Repartidores'; 
-import PanelDeEmpleados from './views/PanelDeEmpleados'; // <-- Nueva importación agregada
+import PanelDeEmpleados from './views/PanelDeEmpleados'; 
+import FormularioUsuario from './views/FormularioUsuario'; // <-- Importación actualizada con el nuevo nombre
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
         <Route path="/empleado" element={<Empleado />} />
         <Route path="/inicio-usuario" element={<InicioUsuario />} />
         
+        {/* Tu nueva pantalla de Registro (FormularioUsuario) integrada perfectamente */}
+        <Route path="/registro" element={<FormularioUsuario />} />
+
         {/* Tu nueva pantalla de Ganancias integrada perfectamente */}
         <Route path="/ganancias" element={<Ganancias />} />
 
