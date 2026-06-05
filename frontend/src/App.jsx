@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react'; // 🔄 Importamos useEffect para controlar los títulos
 
 // Importación de todas tus páginas
 import Inicio from './views/Inicio';
@@ -8,12 +9,40 @@ import InicioUsuario from './views/InicioUsuario';
 import Ganancias from './views/Ganancias';
 import Repartidores from './views/Repartidores'; 
 import PanelDeEmpleados from './views/PanelDeEmpleados'; 
-import FormularioUsuario from './views/FormularioUsuario'; // <-- Importación actualizada con el nuevo nombre
-import RegistroDepaquetes from './views/RegistroDepaquetes'; // 📝 ¡Nueva importación agregada!
+import FormularioUsuario from './views/FormularioUsuario'; 
+import RegistroDepaquetes from './views/RegistroDepaquetes'; 
+
+// 🎯 COMPONENTE INTERNO: Cambia el título de la pestaña automáticamente según la ruta activa
+const DynamicTitle = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Definimos el nombre que tendrá cada una de tus rutas
+    const titles = {
+      '/': 'Inicio | La Ruta Logistics',
+      '/login': 'Iniciar Sesión | La Ruta Logistics',
+      '/empleado': 'Panel de Control | La Ruta Logistics',
+      '/inicio-usuario': 'Inicio Usuario | La Ruta Logistics',
+      '/registro': 'Registro de Usuario | La Ruta Logistics',
+      '/ganancias': 'Ganancias | La Ruta Logistics',
+      '/repartidor': 'Repartidores | La Ruta Logistics',
+      '/panel-empleados': 'Panel de Empleados | La Ruta Logistics',
+      '/registro-paquetes': 'Registro de Paquetes | La Ruta Logistics',
+    };
+
+    // Aplica el título correspondiente, o usa uno por defecto si la ruta no está en la lista
+    document.title = titles[location.pathname] || 'La Ruta Logistics';
+  }, [location]);
+
+  return null; // Este componente no altera la interfaz visual, solo maneja el título
+};
 
 function App() {
   return (
     <Router>
+      {/* 🚀 Aquí se activa el componente dinámico para las pestañas */}
+      <DynamicTitle />
+
       <Routes>
         {/* Tus rutas originales restablecidas */}
         <Route path="/" element={<Inicio />} />

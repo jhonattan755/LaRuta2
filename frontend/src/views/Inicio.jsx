@@ -1,12 +1,10 @@
-
-// 1. AQUÍ CAMBIÓ: Importamos useNavigate para el manejo de rutas internas
+// 1. Importamos useNavigate para el manejo de rutas internas
 import { useNavigate } from 'react-router-dom';
 
 const Inicio = () => {
-  // 2. AQUÍ CAMBIÓ: Inicializamos el hook de navegación
+  // 2. Inicializamos el hook de navegación
   const navigate = useNavigate();
 
-  // 3. AQUÍ CAMBIÓ: Modificamos la función para que use la ruta interna de React
   const irAlPanel = () => {
     navigate('/empleado');
   };
@@ -16,19 +14,56 @@ const Inicio = () => {
       
       {/* 1. BARRA DE NAVEGACIÓN */}
       <nav style={{ backgroundColor: '#1e3a8a', padding: '16px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white', position: 'sticky', top: 0, zIndex: 1000 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }} onClick={() => navigate('/')}>
           <span style={{ fontSize: '24px', fontWeight: 'bold', letterSpacing: '1px' }}>📍 LA RUTA</span>
         </div>
+        
+        {/* ENLACES INTERACTIVOS DEL MENÚ */}
         <div style={{ display: 'flex', gap: '30px', fontSize: '15px', fontWeight: '500' }}>
-          <span style={{ cursor: 'pointer', opacity: 0.9 }}>Iniciooo</span>
-          <span style={{ cursor: 'pointer', opacity: 0.7 }}>Repartidor</span>
-          <span style={{ cursor: 'pointer', opacity: 0.7 }}>Panel de empleados</span>
-          <span style={{ cursor: 'pointer', opacity: 0.7 }}>Panel de control</span>
-          <span style={{ cursor: 'pointer', opacity: 0.9 }}>Registro de paquetes</span>
+          <span 
+            onClick={() => navigate('/')} 
+            style={{ cursor: 'pointer', opacity: 1, fontWeight: 'bold', borderBottom: '2px solid #f59e0b', paddingBottom: '2px' }}
+          >
+            Iniciooo
+          </span>
+          <span 
+            onClick={() => navigate('/repartidor')} 
+            style={{ cursor: 'pointer', opacity: 0.7, transition: '0.2s' }}
+            onMouseEnter={(e) => e.target.style.opacity = '1'}
+            onMouseLeave={(e) => e.target.style.opacity = '0.7'}
+          >
+            Repartidor
+          </span>
+          <span 
+            onClick={() => navigate('/panel-empleados')} 
+            style={{ cursor: 'pointer', opacity: 0.7, transition: '0.2s' }}
+            onMouseEnter={(e) => e.target.style.opacity = '1'}
+            onMouseLeave={(e) => e.target.style.opacity = '0.7'}
+          >
+            Panel de empleados
+          </span>
+          <span 
+            onClick={() => navigate('/empleado')} 
+            style={{ cursor: 'pointer', opacity: 0.7, transition: '0.2s' }}
+            onMouseEnter={(e) => e.target.style.opacity = '1'}
+            onMouseLeave={(e) => e.target.style.opacity = '0.7'}
+          >
+            Panel de control
+          </span>
+          <span 
+            onClick={() => navigate('/registro-paquetes')} 
+            style={{ cursor: 'pointer', opacity: 0.7, transition: '0.2s' }}
+            onMouseEnter={(e) => e.target.style.opacity = '1'}
+            onMouseLeave={(e) => e.target.style.opacity = '0.7'}
+          >
+            Registro de paquetes
+          </span>
         </div>
+
+        {/* 🛠️ AQUÍ CAMBIÓ: Ahora redirige directo a hacer un pedido en '/empleado' */}
         <div>
           <button onClick={irAlPanel} style={{ backgroundColor: '#f59e0b', color: '#1e3a8a', border: 'none', padding: '10px 20px', borderRadius: '25px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px', transition: '0.3s' }}>
-            Ingresar al Panel
+            Crear Encomienda
           </button>
         </div>
       </nav>
